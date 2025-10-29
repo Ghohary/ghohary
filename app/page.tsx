@@ -40,7 +40,7 @@ export default function Home() {
           <div className="relative text-center py-6 flex items-center justify-between">
             {/* Left Icons - Call and Search */}
             <div className="flex items-center gap-4">
-              <button className={`transition-colors flex items-center gap-2 ${
+              <button className={`transition-colors ${
                 isScrolled 
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
@@ -48,9 +48,8 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span className="text-xs tracking-widest font-light">CALL US</span>
               </button>
-              <button className={`transition-colors flex items-center gap-2 ${
+              <button className={`transition-colors ${
                 isScrolled 
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
@@ -58,12 +57,20 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <span className="text-xs tracking-widest font-light">SEARCH</span>
+              </button>
+              <button className={`transition-colors ${
+                isScrolled 
+                  ? 'text-black hover:text-gray-400' 
+                  : 'text-white hover:text-gray-400'
+              }`}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 13 8 13s8-7.75 8-13c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                </svg>
               </button>
             </div>
             
             {/* Logo Center */}
-            <div className={`absolute left-1/2 transform -translate-x-1/2 text-4xl tracking-[0.5em] font-serif transition-colors duration-300 ${
+            <div className={`absolute left-1/2 transform -translate-x-1/2 text-4xl tracking-[0.2em] font-serif transition-colors duration-300 ${
               isScrolled ? 'text-black' : 'text-white'
             }`}>
               GHOHARY
@@ -110,11 +117,31 @@ export default function Home() {
           <div className={`flex justify-center gap-12 pb-8 text-sm tracking-[0.25em] font-light transition-all duration-300 ${
             isScrolled ? 'text-black' : 'text-white'
           }`}>
-            <a href="/couture" className="hover:text-gray-400 transition-colors duration-300 cursor-pointer">COUTURE</a>
-            <a href="/ready-to-wear" className="hover:text-gray-400 transition-colors duration-300 cursor-pointer">READY TO WEAR</a>
-            <a href="/bridal" className="hover:text-gray-400 transition-colors duration-300 cursor-pointer">BRIDAL</a>
-            <a href="/accessories" className="hover:text-gray-400 transition-colors duration-300 cursor-pointer">ACCESSORIES</a>
-            <a href="/maison" className="hover:text-gray-400 transition-colors duration-300 cursor-pointer">MAISON</a>
+            <a href="/couture" className={`cursor-pointer border-b-2 pb-1 transition-all duration-300 ${
+              isScrolled 
+                ? 'border-transparent hover:border-black text-black' 
+                : 'border-transparent hover:border-white text-white'
+            }`}>COUTURE</a>
+            <a href="/ready-to-wear" className={`cursor-pointer border-b-2 pb-1 transition-all duration-300 ${
+              isScrolled 
+                ? 'border-transparent hover:border-black text-black' 
+                : 'border-transparent hover:border-white text-white'
+            }`}>READY TO WEAR</a>
+            <a href="/bridal" className={`cursor-pointer border-b-2 pb-1 transition-all duration-300 ${
+              isScrolled 
+                ? 'border-transparent hover:border-black text-black' 
+                : 'border-transparent hover:border-white text-white'
+            }`}>BRIDAL</a>
+            <a href="/accessories" className={`cursor-pointer border-b-2 pb-1 transition-all duration-300 ${
+              isScrolled 
+                ? 'border-transparent hover:border-black text-black' 
+                : 'border-transparent hover:border-white text-white'
+            }`}>ACCESSORIES</a>
+            <a href="/maison" className={`cursor-pointer border-b-2 pb-1 transition-all duration-300 ${
+              isScrolled 
+                ? 'border-transparent hover:border-black text-black' 
+                : 'border-transparent hover:border-white text-white'
+            }`}>MAISON</a>
           </div>
         </div>
       </nav>
@@ -160,6 +187,13 @@ export default function Home() {
               </div>
             ))}
           </div>
+          
+          {/* Discover Button */}
+          <div className="mt-12 text-center">
+            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">
+              DISCOVER THE COLLECTION
+            </button>
+          </div>
         </div>
       </section>
 
@@ -203,6 +237,13 @@ export default function Home() {
                 </p>
               </div>
             ))}
+          </div>
+          
+          {/* Discover Button */}
+          <div className="mt-12 text-center">
+            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">
+              DISCOVER THE COLLECTION
+            </button>
           </div>
         </div>
       </section>
@@ -248,6 +289,13 @@ export default function Home() {
               </div>
             ))}
           </div>
+          
+          {/* Discover Button */}
+          <div className="mt-12 text-center">
+            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">
+              DISCOVER THE COLLECTION
+            </button>
+          </div>
         </div>
       </section>
 
@@ -292,62 +340,12 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Video Section 5 */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gray-300">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-32 bg-white">
-        <div className="px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-light tracking-tight mb-6 text-black">OUR SERVICES</h2>
-            <p className="text-neutral-600 font-light text-lg">Exceptional service at every step of your journey</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-12">
-            {[
-              {
-                title: 'Personal Styling',
-                description: 'Our expert stylists are available for exclusive consultations to find the perfect piece for your special occasion.'
-              },
-              {
-                title: 'Bespoke Design',
-                description: 'Create a custom piece tailored to your vision with our master artisans and designers.'
-              },
-              {
-                title: 'Premium Alterations',
-                description: 'Ensure the perfect fit with our meticulous alteration services performed by skilled craftspeople.'
-              },
-              {
-                title: 'Luxury Care',
-                description: 'Preserve your treasured pieces with our specialized cleaning and maintenance services.'
-              },
-              {
-                title: 'VIP Access',
-                description: 'Enjoy exclusive early access to new collections and private shopping experiences.'
-              },
-              {
-                title: 'Global Delivery',
-                description: 'Discreet and secure worldwide shipping with white-glove delivery service.'
-              }
-            ].map((service, i) => (
-              <div key={i} className="text-center">
-                <h3 className="text-xl font-light text-black mb-4">{service.title}</h3>
-                <p className="text-neutral-600 font-light leading-relaxed">{service.description}</p>
-              </div>
-            ))}
+          
+          {/* Discover Button */}
+          <div className="mt-12 text-center">
+            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">
+              DISCOVER THE COLLECTION
+            </button>
           </div>
         </div>
       </section>
