@@ -33,7 +33,7 @@ export default function Home() {
       <nav className={`fixed top-0 w-full z-50 backdrop-blur-md transition-all duration-300 ${
         isScrolled 
           ? 'bg-white border-b border-neutral-200' 
-          : 'bg-transparent'
+          : 'bg-transparent border-b border-transparent'
       }`}>
         <div className="w-full px-8">
           {/* Logo Centered with Icons */}
