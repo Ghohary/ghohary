@@ -155,7 +155,7 @@ export default function Home() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/embroidery-video.mp4" type="video/mp4" />
         </video>
       </section>
 
@@ -206,7 +206,7 @@ export default function Home() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/embroidery-video.mp4" type="video/mp4" />
         </video>
       </section>
 
@@ -257,7 +257,7 @@ export default function Home() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/embroidery-video.mp4" type="video/mp4" />
         </video>
       </section>
 
@@ -308,7 +308,7 @@ export default function Home() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/embroidery-video.mp4" type="video/mp4" />
         </video>
       </section>
 
