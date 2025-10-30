@@ -13,9 +13,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen text-neutral-900">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-end justify-center overflow-hidden pt-40 bg-transparent pb-20">
+    <div className="text-neutral-900">
+      {/* Hero Section - Full Screen with Video */}
+      <section className="relative h-screen flex items-end justify-center overflow-hidden pb-20 -mt-24">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover absolute inset-0">
           <source src="/third.mp4" type="video/mp4" />
         </video>
