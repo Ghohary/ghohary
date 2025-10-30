@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import Footer from '@/components/Footer';
+
 
 export default function ReadyToWearPage() {
   return (
