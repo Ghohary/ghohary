@@ -3,10 +3,23 @@
 
 import { useState } from 'react';
 
-export default function StoreLocator() {
-  const [selectedStore, setSelectedStore] = useState(null);
+interface Store {
+  id: number;
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  phone: string;
+  email: string;
+  hours: string;
+  isFlagship: boolean;
+  image: string;
+}
 
-  const stores = [
+export default function StoreLocator() {
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+
+  const stores: Store[] = [
     {
       id: 1,
       name: 'Dubai Flagship Store',
@@ -59,6 +72,21 @@ export default function StoreLocator() {
 
   const flagshipStores = stores.filter(store => store.isFlagship);
 
+  const getMarkerPosition = (city: string): { x: number; y: number } => {
+    switch (city) {
+      case 'Dubai':
+        return { x: 570, y: 240 };
+      case 'Abu Dhabi':
+        return { x: 560, y: 250 };
+      case 'Riyadh':
+        return { x: 540, y: 220 };
+      case 'Jeddah':
+        return { x: 510, y: 240 };
+      default:
+        return { x: 0, y: 0 };
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation Spacer */}
@@ -73,28 +101,28 @@ export default function StoreLocator() {
             <div className="absolute inset-0 bg-stone-100">
               <svg className="w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
                 {/* Ocean */}
-                <rect width="1000" height="600" fill="#e8e8e8"/>
+                <rect width={1000} height={600} fill="#e8e8e8" />
                 
                 {/* Continents */}
                 <g fill="#d4d4d8" stroke="none">
                   {/* North America */}
-                  <path d="M 80 100 L 180 80 L 200 200 L 150 250 L 100 220 Z"/>
+                  <path d="M 80 100 L 180 80 L 200 200 L 150 250 L 100 220 Z" />
                   {/* South America */}
-                  <path d="M 140 250 L 180 240 L 190 380 L 160 390 Z"/>
+                  <path d="M 140 250 L 180 240 L 190 380 L 160 390 Z" />
                   {/* Europe */}
-                  <path d="M 450 80 L 520 85 L 530 150 L 480 160 Z"/>
+                  <path d="M 450 80 L 520 85 L 530 150 L 480 160 Z" />
                   {/* Africa */}
-                  <path d="M 450 150 L 520 160 L 540 350 L 480 360 Z"/>
+                  <path d="M 450 150 L 520 160 L 540 350 L 480 360 Z" />
                   {/* Middle East */}
-                  <path d="M 520 160 L 580 170 L 600 260 L 540 270 Z"/>
+                  <path d="M 520 160 L 580 170 L 600 260 L 540 270 Z" />
                   {/* Asia */}
-                  <path d="M 580 100 L 750 90 L 800 200 L 750 280 L 600 270 Z"/>
+                  <path d="M 580 100 L 750 90 L 800 200 L 750 280 L 600 270 Z" />
                   {/* Australia */}
-                  <path d="M 750 380 L 810 375 L 820 450 L 760 455 Z"/>
+                  <path d="M 750 380 L 810 375 L 820 450 L 760 455 Z" />
                 </g>
 
                 {/* Grid lines for reference */}
-                <g stroke="#e0e0e0" strokeWidth="1" opacity="0.3">
+                <g stroke="#e0e0e0" strokeWidth="1" opacity={0.3}>
                   {/* Latitude lines */}
                   <line x1="0" y1="100" x2="1000" y2="100" />
                   <line x1="0" y1="200" x2="1000" y2="200" />
@@ -110,30 +138,16 @@ export default function StoreLocator() {
 
                 {/* Store Markers */}
                 {stores.map((store) => {
-                  let x, y;
-                  if (store.city === 'Dubai') {
-                    x = 570;
-                    y = 240;
-                  } else if (store.city === 'Abu Dhabi') {
-                    x = 560;
-                    y = 250;
-                  } else if (store.city === 'Riyadh') {
-                    x = 540;
-                    y = 220;
-                  } else if (store.city === 'Jeddah') {
-                    x = 510;
-                    y = 240;
-                  }
-
+                  const pos = getMarkerPosition(store.city);
                   return (
                     <g key={store.id}>
                       {/* Marker Circle */}
                       <circle
-                        cx={x}
-                        cy={y}
-                        r={store.isFlagship ? "28" : "16"}
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={store.isFlagship ? 28 : 16}
                         fill={store.isFlagship ? "#000000" : "#999999"}
-                        opacity={store.isFlagship ? "1" : "0.7"}
+                        opacity={store.isFlagship ? 1 : 0.7}
                         className="transition-all duration-300 cursor-pointer hover:opacity-100"
                         onClick={() => setSelectedStore(store)}
                       />
@@ -141,9 +155,9 @@ export default function StoreLocator() {
                       {/* Pulse for flagship */}
                       {store.isFlagship && (
                         <>
-                          <circle cx={x} cy={y} r="22" fill="none" stroke="#000000" strokeWidth="2" opacity="0.3"/>
-                          <circle cx={x} cy={y} r="6" fill="#ffffff"/>
-                          <text x={x} y={y + 45} textAnchor="middle" fontSize="12" fill="#333" fontWeight="300" className="pointer-events-none">
+                          <circle cx={pos.x} cy={pos.y} r="22" fill="none" stroke="#000000" strokeWidth="2" opacity={0.3} />
+                          <circle cx={pos.x} cy={pos.y} r="6" fill="#ffffff" />
+                          <text x={pos.x} y={pos.y + 45} textAnchor="middle" fontSize="12" fill="#333" fontWeight="300" className="pointer-events-none">
                             {store.city}
                           </text>
                         </>
@@ -152,13 +166,6 @@ export default function StoreLocator() {
                   );
                 })}
               </svg>
-            </div>
-
-            {/* Overlay Text */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <p className="text-center text-neutral-600 font-light text-lg tracking-wide">
-                WORLD MAP
-              </p>
             </div>
           </div>
 
@@ -227,7 +234,7 @@ export default function StoreLocator() {
                 </div>
               </div>
 
-              {/* Other Stores */}
+              {/* All Stores */}
               <div>
                 <h2 className="text-xs tracking-[0.2em] font-normal text-black mb-8">
                   ALL STORES
@@ -262,7 +269,7 @@ export default function StoreLocator() {
       {/* Store Details Modal - Overlay */}
       {selectedStore && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
             {/* Close Button */}
             <button
               onClick={() => setSelectedStore(null)}
@@ -280,9 +287,10 @@ export default function StoreLocator() {
                 alt={selectedStore.name}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.target.style.display = 'none';
-                  if (e.target.parentElement) {
-                    e.target.parentElement.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-2xl text-stone-400 bg-stone-200">Store Image</div>`;
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  if (target.parentElement) {
+                    target.parentElement.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-2xl text-stone-400 bg-stone-200">Store Image</div>';
                   }
                 }}
               />
