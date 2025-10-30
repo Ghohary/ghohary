@@ -16,7 +16,7 @@ const initialProducts: Product[] = [
   {
     id: 1,
     name: 'Celestial Gown',
-    price: '45,000 AED',
+    price: '20,000 AED',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     colors: ['White', 'Ivory', 'Champagne'],
     status: 'available',
