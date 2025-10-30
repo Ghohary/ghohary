@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from 'react';
@@ -89,75 +88,42 @@ export default function StoreLocator() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation Spacer */}
-      <div className="h-24"></div>
-
-      {/* Main Section */}
       <section className="py-0">
         <div className="grid grid-cols-2 gap-0 min-h-screen">
           {/* Left Side - Map */}
           <div className="relative h-screen bg-stone-200 flex items-center justify-center overflow-hidden">
-            {/* World Map Background */}
             <div className="absolute inset-0 bg-stone-100">
               <svg className="w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
-                {/* Ocean */}
                 <rect width={1000} height={600} fill="#e8e8e8" />
-                
-                {/* Continents */}
                 <g fill="#d4d4d8" stroke="none">
-                  {/* North America */}
                   <path d="M 80 100 L 180 80 L 200 200 L 150 250 L 100 220 Z" />
-                  {/* South America */}
                   <path d="M 140 250 L 180 240 L 190 380 L 160 390 Z" />
-                  {/* Europe */}
                   <path d="M 450 80 L 520 85 L 530 150 L 480 160 Z" />
-                  {/* Africa */}
                   <path d="M 450 150 L 520 160 L 540 350 L 480 360 Z" />
-                  {/* Middle East */}
                   <path d="M 520 160 L 580 170 L 600 260 L 540 270 Z" />
-                  {/* Asia */}
                   <path d="M 580 100 L 750 90 L 800 200 L 750 280 L 600 270 Z" />
-                  {/* Australia */}
                   <path d="M 750 380 L 810 375 L 820 450 L 760 455 Z" />
                 </g>
-
-                {/* Grid lines for reference */}
                 <g stroke="#e0e0e0" strokeWidth="1" opacity={0.3}>
-                  {/* Latitude lines */}
                   <line x1="0" y1="100" x2="1000" y2="100" />
                   <line x1="0" y1="200" x2="1000" y2="200" />
                   <line x1="0" y1="300" x2="1000" y2="300" />
                   <line x1="0" y1="400" x2="1000" y2="400" />
-                  
-                  {/* Longitude lines */}
                   <line x1="200" y1="0" x2="200" y2="600" />
                   <line x1="400" y1="0" x2="400" y2="600" />
                   <line x1="600" y1="0" x2="600" y2="600" />
                   <line x1="800" y1="0" x2="800" y2="600" />
                 </g>
-
-                {/* Store Markers */}
                 {stores.map((store) => {
                   const pos = getMarkerPosition(store.city);
                   return (
                     <g key={store.id}>
-                      {/* Marker Circle */}
-                      <circle
-                        cx={pos.x}
-                        cy={pos.y}
-                        r={store.isFlagship ? 28 : 16}
-                        fill={store.isFlagship ? "#000000" : "#999999"}
-                        opacity={store.isFlagship ? 1 : 0.7}
-                        className="transition-all duration-300 cursor-pointer hover:opacity-100"
-                        onClick={() => setSelectedStore(store)}
-                      />
-                      
-                      {/* Pulse for flagship */}
+                      <circle cx={pos.x} cy={pos.y} r={store.isFlagship ? 28 : 16} fill={store.isFlagship ? "#000000" : "#999999"} opacity={store.isFlagship ? 1 : 0.7} className="cursor-pointer" onClick={() => setSelectedStore(store)} />
                       {store.isFlagship && (
                         <>
                           <circle cx={pos.x} cy={pos.y} r="22" fill="none" stroke="#000000" strokeWidth="2" opacity={0.3} />
                           <circle cx={pos.x} cy={pos.y} r="6" fill="#ffffff" />
-                          <text x={pos.x} y={pos.y + 45} textAnchor="middle" fontSize="12" fill="#333" fontWeight="300" className="pointer-events-none">
+                          <text x={pos.x} y={pos.y + 45} textAnchor="middle" fontSize="12" fill="#333">
                             {store.city}
                           </text>
                         </>
@@ -171,92 +137,42 @@ export default function StoreLocator() {
 
           {/* Right Side - Store Info */}
           <div className="h-screen bg-white flex flex-col overflow-y-auto">
-            {/* Header */}
             <div className="sticky top-0 bg-white py-12 px-12 border-b border-neutral-200 z-10">
-              <h1 className="text-4xl font-light tracking-wider text-black mb-2">
-                LOCATE A STORE
-              </h1>
-              <p className="text-neutral-600 font-light">
-                Find our boutiques worldwide
-              </p>
+              <h1 className="text-4xl font-light tracking-wider text-black mb-2">LOCATE A STORE</h1>
+              <p className="text-neutral-600 font-light">Find our boutiques worldwide</p>
             </div>
 
-            {/* Content */}
             <div className="flex-1 flex flex-col p-12">
-              {/* Find Store Section */}
               <div className="mb-12">
-                <input
-                  type="text"
-                  placeholder="Find store"
-                  className="w-full px-4 py-3 border-b-2 border-neutral-300 focus:border-black outline-none font-light text-sm placeholder:text-neutral-400 transition-colors"
-                />
+                <input type="text" placeholder="Find store" className="w-full px-4 py-3 border-b-2 border-neutral-300 focus:border-black outline-none font-light text-sm" />
               </div>
 
-              {/* Use Current Location */}
-              <button className="mb-12 flex items-center gap-3 text-black hover:text-neutral-600 transition-colors">
+              <button className="mb-12 flex items-center gap-3 text-black hover:text-neutral-600">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 </svg>
                 <span className="text-sm font-light tracking-wide">USE MY CURRENT LOCATION</span>
               </button>
 
-              {/* Flagship Stores */}
               <div className="mb-12">
-                <h2 className="text-xs tracking-[0.2em] font-normal text-black mb-8">
-                  OUR FLAGSHIP STORES
-                </h2>
-
+                <h2 className="text-xs tracking-[0.2em] font-normal text-black mb-8">OUR FLAGSHIP STORES</h2>
                 <div className="space-y-6">
-                  {flagshipStores.length > 0 ? (
-                    flagshipStores.map((store) => (
-                      <button
-                        key={store.id}
-                        onClick={() => setSelectedStore(store)}
-                        className={`w-full text-left p-6 border-2 transition-all duration-300 ${
-                          selectedStore?.id === store.id
-                            ? 'border-black bg-black text-white'
-                            : 'border-neutral-200 bg-white text-black hover:border-black'
-                        }`}
-                      >
-                        <h3 className="text-base font-light tracking-wide mb-1">
-                          {store.name}
-                        </h3>
-                        <p className={`text-xs font-light ${
-                          selectedStore?.id === store.id ? 'text-gray-300' : 'text-neutral-600'
-                        }`}>
-                          {store.city}, {store.country}
-                        </p>
-                      </button>
-                    ))
-                  ) : (
-                    <p className="text-neutral-500 font-light text-sm">No flagship stores</p>
-                  )}
+                  {flagshipStores.map((store) => (
+                    <button key={store.id} onClick={() => setSelectedStore(store)} className={`w-full text-left p-6 border-2 ${selectedStore?.id === store.id ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-black hover:border-black'}`}>
+                      <h3 className="text-base font-light tracking-wide mb-1">{store.name}</h3>
+                      <p className={`text-xs font-light ${selectedStore?.id === store.id ? 'text-gray-300' : 'text-neutral-600'}`}>{store.city}, {store.country}</p>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* All Stores */}
               <div>
-                <h2 className="text-xs tracking-[0.2em] font-normal text-black mb-8">
-                  ALL STORES
-                </h2>
-
+                <h2 className="text-xs tracking-[0.2em] font-normal text-black mb-8">ALL STORES</h2>
                 <div className="space-y-3">
                   {stores.map((store) => (
-                    <button
-                      key={store.id}
-                      onClick={() => setSelectedStore(store)}
-                      className={`w-full text-left p-4 border-b-2 pb-4 transition-all duration-300 ${
-                        selectedStore?.id === store.id
-                          ? 'border-black'
-                          : 'border-transparent hover:border-neutral-300'
-                      }`}
-                    >
-                      <p className="text-sm font-light text-black mb-1">
-                        {store.name}
-                      </p>
-                      <p className="text-xs font-light text-neutral-600">
-                        {store.city}, {store.country}
-                      </p>
+                    <button key={store.id} onClick={() => setSelectedStore(store)} className={`w-full text-left p-4 border-b-2 pb-4 ${selectedStore?.id === store.id ? 'border-black' : 'border-transparent hover:border-neutral-300'}`}>
+                      <p className="text-sm font-light text-black mb-1">{store.name}</p>
+                      <p className="text-xs font-light text-neutral-600">{store.city}, {store.country}</p>
                     </button>
                   ))}
                 </div>
@@ -266,148 +182,53 @@ export default function StoreLocator() {
         </div>
       </section>
 
-      {/* Store Details Modal - Overlay */}
       {selectedStore && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedStore(null)}
-              className="absolute top-6 right-6 z-10 text-black hover:text-neutral-600 transition-colors"
-            >
+            <button onClick={() => setSelectedStore(null)} className="absolute top-6 right-6 z-10 text-black hover:text-neutral-600">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            {/* Store Image */}
             <div className="relative aspect-video bg-stone-200">
-              <img
-                src={selectedStore.image}
-                alt={selectedStore.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  if (target.parentElement) {
-                    target.parentElement.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-2xl text-stone-400 bg-stone-200">Store Image</div>';
-                  }
-                }}
-              />
+              <img src={selectedStore.image} alt={selectedStore.name} className="w-full h-full object-cover" />
             </div>
 
-            {/* Store Information */}
             <div className="p-12">
-              <h2 className="text-4xl font-light tracking-wide mb-2 text-black">
-                {selectedStore.name}
-              </h2>
-              {selectedStore.isFlagship && (
-                <p className="text-xs tracking-[0.2em] font-normal text-neutral-600 mb-8">
-                  FLAGSHIP STORE
-                </p>
-              )}
+              <h2 className="text-4xl font-light tracking-wide mb-2 text-black">{selectedStore.name}</h2>
+              {selectedStore.isFlagship && <p className="text-xs tracking-[0.2em] font-normal text-neutral-600 mb-8">FLAGSHIP STORE</p>}
 
-              {/* Details Grid */}
               <div className="grid grid-cols-2 gap-12 mb-12">
                 <div>
-                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">
-                    ADDRESS
-                  </p>
-                  <p className="text-base font-light text-neutral-700 leading-relaxed">
-                    {selectedStore.address}
-                  </p>
+                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">ADDRESS</p>
+                  <p className="text-base font-light text-neutral-700 leading-relaxed">{selectedStore.address}</p>
                 </div>
-
                 <div>
-                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">
-                    HOURS
-                  </p>
-                  <p className="text-base font-light text-neutral-700">
-                    {selectedStore.hours}
-                  </p>
+                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">HOURS</p>
+                  <p className="text-base font-light text-neutral-700">{selectedStore.hours}</p>
                 </div>
               </div>
 
-              {/* Contact */}
               <div className="grid grid-cols-2 gap-12 py-12 border-t border-b border-neutral-200 mb-12">
                 <div>
-                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">
-                    PHONE
-                  </p>
-                  <a href={`tel:${selectedStore.phone}`} className="text-base font-light text-neutral-700 hover:text-black transition-colors">
-                    {selectedStore.phone}
-                  </a>
+                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">PHONE</p>
+                  <a href={`tel:${selectedStore.phone}`} className="text-base font-light text-neutral-700 hover:text-black">{selectedStore.phone}</a>
                 </div>
-
                 <div>
-                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">
-                    EMAIL
-                  </p>
-                  <a href={`mailto:${selectedStore.email}`} className="text-base font-light text-neutral-700 hover:text-black transition-colors">
-                    {selectedStore.email}
-                  </a>
+                  <p className="text-xs tracking-[0.2em] font-normal text-black mb-3">EMAIL</p>
+                  <a href={`mailto:${selectedStore.email}`} className="text-base font-light text-neutral-700 hover:text-black">{selectedStore.email}</a>
                 </div>
               </div>
 
-              {/* CTA Buttons */}
               <div className="flex gap-6">
-                <button className="flex-1 px-8 py-4 border-2 border-black text-black font-light text-xs tracking-wider hover:bg-black hover:text-white transition-all duration-300">
-                  GET DIRECTIONS
-                </button>
-                <button className="flex-1 px-8 py-4 bg-black text-white font-light text-xs tracking-wider hover:bg-neutral-900 transition-all duration-300">
-                  BOOK APPOINTMENT
-                </button>
+                <button className="flex-1 px-8 py-4 border-2 border-black text-black font-light text-xs tracking-wider hover:bg-black hover:text-white">GET DIRECTIONS</button>
+                <button className="flex-1 px-8 py-4 bg-black text-white font-light text-xs tracking-wider hover:bg-neutral-900">BOOK APPOINTMENT</button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <footer className="bg-black text-white border-t border-neutral-800">
-        <div className="px-8 py-16">
-          <div className="grid grid-cols-4 gap-16 mb-12">
-            <div>
-              <h3 className="text-[11px] tracking-[0.2em] font-normal mb-6 text-white">HELP</h3>
-              <ul className="space-y-3">
-                <li className="text-[11px] font-light text-neutral-400 leading-relaxed">
-                  Contact us at <span className="text-white">+971 800 884 8866</span>
-                </li>
-                <li><a href="#" className="text-[11px] font-light text-neutral-400 hover:text-white transition-colors">FAQ</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-[11px] tracking-[0.2em] font-normal mb-6 text-white">ABOUT</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-[11px] font-light text-neutral-400 hover:text-white transition-colors">Our Story</a></li>
-                <li><a href="#" className="text-[11px] font-light text-neutral-400 hover:text-white transition-colors">Collections</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-[11px] tracking-[0.2em] font-normal mb-6 text-white">CONNECT</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-[11px] font-light text-neutral-400 hover:text-white transition-colors">Instagram</a></li>
-                <li><a href="#" className="text-[11px] font-light text-neutral-400 hover:text-white transition-colors">Facebook</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-[11px] tracking-[0.2em] font-normal mb-6 text-white">NEWSLETTER</h3>
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full bg-transparent border-b border-neutral-700 focus:border-white px-0 py-2 text-[11px] font-light text-white outline-none transition-colors placeholder:text-neutral-600"
-              />
-            </div>
-          </div>
-
-          <div className="border-t border-neutral-800 pt-8 text-[10px] font-light text-neutral-400">
-            <p>© 2026 GHOHARY. All Rights Reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
