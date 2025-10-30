@@ -3,7 +3,65 @@
 
 import { useState } from 'react';
 
+interface Product {
+  id: number;
+  name: string;
+  price?: string;
+  sizes: string[];
+  colors: string[];
+  status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
+  category: 'couture' | 'ready-to-wear' | 'bridal' | 'accessories' | 'maison';
+}
+
+const initialProducts: Product[] = [
+  {
+    id: 1,
+    name: 'Celestial Gown',
+    price: '45,000 AED',
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: ['White', 'Ivory', 'Champagne'],
+    status: 'available',
+    category: 'couture'
+  },
+  {
+    id: 2,
+    name: 'Pearl Earrings',
+    price: '8,500 AED',
+    sizes: ['One Size'],
+    colors: ['Silver', 'Gold'],
+    status: 'available',
+    category: 'accessories'
+  },
+  {
+    id: 3,
+    name: 'Silk Gloves',
+    price: '2,200 AED',
+    sizes: ['S', 'M', 'L'],
+    colors: ['Black', 'White', 'Cream'],
+    status: 'available',
+    category: 'accessories'
+  },
+  {
+    id: 4,
+    name: 'Crystal Clutch',
+    sizes: ['One Size'],
+    colors: ['Black', 'Gold'],
+    status: 'hidden-price',
+    category: 'accessories'
+  },
+  {
+    id: 5,
+    name: 'Bridal Gown',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'Custom'],
+    colors: ['White', 'Ivory'],
+    status: 'appointment',
+    category: 'bridal'
+  }
+];
+
 export default function Home() {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
   const handleImageError = (i: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
     target.style.display = 'none';
@@ -14,7 +72,7 @@ export default function Home() {
 
   return (
     <div className="text-neutral-900">
-      {/* Hero Section - Full Screen with Video */}
+      {/* Hero Section */}
       <section className="relative h-screen flex items-end justify-center overflow-hidden pb-20 -mt-24">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover absolute inset-0">
           <source src="/third.mp4" type="video/mp4" />
@@ -29,18 +87,19 @@ export default function Home() {
       <section className="bg-white py-24">
         <div className="px-8">
           <div className="grid grid-cols-4 gap-8">
-            {[
-              { name: 'Celestial Gown', price: '45,000 AED', image: '/products/gown-1.jpg' },
-              { name: 'Pearl Earrings', price: '8,500 AED', image: '/products/earrings-1.jpg' },
-              { name: 'Silk Gloves', price: '2,200 AED', image: '/products/gloves-1.jpg' },
-              { name: 'Crystal Clutch', price: '6,800 AED', image: '/products/clutch-1.jpg' }
-            ].map((product, i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
+            {initialProducts.slice(0, 4).map((product, i) => (
+              <div key={product.id} className="group cursor-pointer">
+                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
+                  <img src={`/products/gown-${i + 1}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
                 </div>
                 <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
-                <p className="text-xs font-normal text-black">{product.price}</p>
+                <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
+                <div className="text-[10px] text-neutral-600 mb-2">
+                  {product.status === 'available' && <span className="text-green-600">Available</span>}
+                  {product.status === 'preorder' && <span className="text-blue-600">Pre-Order</span>}
+                  {product.status === 'appointment' && <span className="text-purple-600">Appointment Only</span>}
+                  {product.status === 'hidden-price' && <span className="text-neutral-600">Inquire for Price</span>}
+                </div>
               </div>
             ))}
           </div>
@@ -61,18 +120,19 @@ export default function Home() {
       <section className="bg-stone-50 py-24">
         <div className="px-8">
           <div className="grid grid-cols-4 gap-8">
-            {[
-              { name: 'Bridal Gown', price: '48,000 AED', image: '/products/gown-2.jpg' },
-              { name: 'Tiara Crown', price: '28,500 AED', image: '/products/tiara.jpg' },
-              { name: 'Embroidered Veil', price: '8,500 AED', image: '/products/veil-1.jpg' },
-              { name: 'Diamond Ring', price: '12,000 AED', image: '/products/ring.jpg' }
-            ].map((product, i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
+            {initialProducts.slice(4).map((product, i) => (
+              <div key={product.id} className="group cursor-pointer">
+                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
+                  <img src={`/products/gown-${i + 2}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
                 </div>
                 <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
-                <p className="text-xs font-normal text-black">{product.price}</p>
+                <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
+                <div className="text-[10px] text-neutral-600 mb-2">
+                  {product.status === 'available' && <span className="text-green-600">Available</span>}
+                  {product.status === 'preorder' && <span className="text-blue-600">Pre-Order</span>}
+                  {product.status === 'appointment' && <span className="text-purple-600">Appointment Only</span>}
+                  {product.status === 'hidden-price' && <span className="text-neutral-600">Inquire for Price</span>}
+                </div>
               </div>
             ))}
           </div>
@@ -89,31 +149,6 @@ export default function Home() {
         </video>
       </section>
 
-      {/* Products Section 3 */}
-      <section className="bg-white py-24">
-        <div className="px-8">
-          <div className="grid grid-cols-4 gap-8">
-            {[
-              { name: 'Evening Gown', price: '35,000 AED', image: '/products/gown-3.jpg' },
-              { name: 'Statement Necklace', price: '12,000 AED', image: '/products/necklace.jpg' },
-              { name: 'Satin Shawl', price: '3,500 AED', image: '/products/shawl.jpg' },
-              { name: 'Heeled Shoes', price: '4,200 AED', image: '/products/shoes.jpg' }
-            ].map((product, i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
-                </div>
-                <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
-                <p className="text-xs font-normal text-black">{product.price}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
-          </div>
-        </div>
-      </section>
-
       {/* Video Section 4 */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gray-300">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover">
@@ -121,30 +156,65 @@ export default function Home() {
         </video>
       </section>
 
-      {/* Products Section 4 */}
-      <section className="bg-stone-50 py-24">
-        <div className="px-8">
-          <div className="grid grid-cols-4 gap-8">
-            {[
-              { name: 'Pearl Necklace', price: '18,000 AED', image: '/products/necklace-2.jpg' },
-              { name: 'Bridal Shoes', price: '5,800 AED', image: '/products/shoes-2.jpg' },
-              { name: 'Beaded Clutch', price: '7,500 AED', image: '/products/clutch-2.jpg' },
-              { name: 'Crystal Earrings', price: '6,200 AED', image: '/products/earrings-2.jpg' }
-            ].map((product, i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
-                </div>
-                <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
-                <p className="text-xs font-normal text-black">{product.price}</p>
+      {/* Product Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedProduct(null)}>
+          <div className="bg-white max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setSelectedProduct(null)} className="float-right text-2xl font-light text-black hover:text-neutral-600">×</button>
+            
+            <h2 className="text-3xl font-light text-black mb-4">{selectedProduct.name}</h2>
+            
+            {selectedProduct.price && (
+              <p className="text-lg font-normal text-black mb-4">{selectedProduct.price}</p>
+            )}
+            
+            {!selectedProduct.price && (
+              <p className="text-lg font-light text-neutral-600 mb-4">Price Upon Request</p>
+            )}
+
+            <div className="mb-6">
+              <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">STATUS</h3>
+              <div className="inline-block px-3 py-1 bg-neutral-100 text-xs font-light tracking-wide">
+                {selectedProduct.status === 'available' && 'Available'}
+                {selectedProduct.status === 'preorder' && 'Pre-Order'}
+                {selectedProduct.status === 'appointment' && 'Appointment Only'}
+                {selectedProduct.status === 'hidden-price' && 'Hidden Price'}
               </div>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">SIZES</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedProduct.sizes.map((size) => (
+                  <button key={size} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">COLORS</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedProduct.colors.map((color) => (
+                  <button key={color} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <button className="flex-1 px-6 py-3 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900">
+                ADD TO CART
+              </button>
+              <button onClick={() => setSelectedProduct(null)} className="flex-1 px-6 py-3 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50">
+                CLOSE
+              </button>
+            </div>
           </div>
         </div>
-      </section>
+      )}
     </div>
   );
 }
