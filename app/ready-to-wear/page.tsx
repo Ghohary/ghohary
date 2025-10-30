@@ -2,9 +2,10 @@
 export default function ReadyToWearPage() {
   return (
     <div className="min-h-screen bg-white">
-      <section className="relative h-screen flex items-center justify-center overflow-hidden pt-40">
-        <div className="relative z-10 text-center px-8">
-          <h1 className="text-7xl font-light text-black">READY TO WEAR</h1>
+      <section className="py-24 px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-7xl font-light text-black mb-8">READY TO WEAR</h1>
+          <p className="text-lg text-neutral-600 font-light">Modern collections</p>
         </div>
       </section>
     </div>
