@@ -146,17 +146,27 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section - Video with Gray Background */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden pt-40 bg-gray-300">
+      {/* Hero Section - Video with Transparent Background */}
+      <section className="relative h-screen flex items-end justify-center overflow-hidden pt-40 bg-transparent pb-20">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover absolute inset-0"
         >
           <source src="/third.mp4" type="video/mp4" />
         </video>
+        
+        {/* Text Overlay */}
+        <div className="relative z-10 text-center">
+          <h1 className="text-6xl md:text-7xl font-light tracking-widest text-white mb-4">
+            SPRING-SUMMER
+          </h1>
+          <p className="text-3xl md:text-4xl font-light tracking-[0.3em] text-white">
+            COLLECTION 2026
+          </p>
+        </div>
       </section>
 
       {/* Products Section 1 */}
