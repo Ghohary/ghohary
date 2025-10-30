@@ -1,10 +1,40 @@
 "use client";
 
 import { useState } from 'react';
-import { products, Product } from '@/lib/products';
+
+interface Product {
+  id: number;
+  name: string;
+  price?: string;
+  sizes: string[];
+  colors: string[];
+  status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
+  category: 'couture' | 'ready-to-wear' | 'bridal' | 'accessories' | 'maison';
+}
+
+const initialProducts: Product[] = [
+  {
+    id: 1,
+    name: 'Celestial Gown',
+    price: '45,000 AED',
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: ['White', 'Ivory', 'Champagne'],
+    status: 'available',
+    category: 'couture'
+  },
+  {
+    id: 2,
+    name: 'Pearl Earrings',
+    price: '8,500 AED',
+    sizes: ['One Size'],
+    colors: ['Silver', 'Gold'],
+    status: 'available',
+    category: 'accessories'
+  }
+];
 
 export default function AdminProducts() {
-  const [productList, setProductList] = useState<Product[]>(products);
+  const [productList, setProductList] = useState<Product[]>(initialProducts);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Product | null>(null);
 
