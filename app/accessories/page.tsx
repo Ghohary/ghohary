@@ -173,7 +173,7 @@ export default function AccessoriesPage() {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 }

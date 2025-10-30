@@ -184,7 +184,7 @@ export default function MaisonPage() {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 }

@@ -173,7 +173,7 @@ export default function ReadyToWearPage() {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 }
