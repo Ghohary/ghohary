@@ -58,7 +58,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
-              <button className={`transition-colors ${
+              <a href="/store-locator" className={`transition-colors ${
                 isScrolled 
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
@@ -66,7 +66,7 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 13 8 13s8-7.75 8-13c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
                 </svg>
-              </button>
+              </a>
             </div>
             
             {/* Logo Center */}
