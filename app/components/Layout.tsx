@@ -9,6 +9,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,18 +20,20 @@ export default function Layout({ children }: LayoutProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isActive = isScrolled || isHovered;
+
   return (
     <>
       <nav className={`fixed top-0 w-full z-50 backdrop-blur-md transition-all duration-300 ${
-        isScrolled 
+        isActive
           ? 'bg-white border-b border-neutral-200' 
           : 'bg-transparent border-b border-transparent'
-      }`}>
+      }`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <div className="w-full px-8">
           <div className="relative text-center py-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button className={`transition-colors ${
-                isScrolled 
+                isActive
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
               }`}>
@@ -39,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <button className={`transition-colors ${
-                isScrolled 
+                isActive
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
               }`}>
@@ -48,7 +51,7 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <a href="/store-locator" className={`transition-colors ${
-                isScrolled 
+                isActive
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
               }`}>
@@ -58,11 +61,11 @@ export default function Layout({ children }: LayoutProps) {
               </a>
             </div>
             <a href="/" className={`absolute left-1/2 transform -translate-x-1/2 text-4xl tracking-[0.2em] font-serif transition-colors duration-300 ${
-              isScrolled ? 'text-black' : 'text-white'
+              isActive ? 'text-black' : 'text-white'
             }`}>GHOHARY</a>
             <div className="flex items-center gap-6">
               <button className={`transition-colors ${
-                isScrolled 
+                isActive
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
               }`}>
@@ -71,7 +74,7 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <button className={`transition-colors ${
-                isScrolled 
+                isActive
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
               }`}>
@@ -80,7 +83,7 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <button className={`transition-colors ${
-                isScrolled 
+                isActive
                   ? 'text-black hover:text-gray-400' 
                   : 'text-white hover:text-gray-400'
               }`}>
@@ -91,30 +94,30 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
           <div className={`flex justify-center gap-12 pb-8 text-sm tracking-[0.25em] font-light transition-all duration-300 ${
-            isScrolled ? 'text-black' : 'text-white'
+            isActive ? 'text-black' : 'text-white'
           }`}>
             <a href="/couture" className={`border-b-2 pb-1 transition-all ${
-              isScrolled 
+              isActive
                 ? 'border-transparent hover:border-black text-black' 
                 : 'border-transparent hover:border-white text-white'
             }`}>COUTURE</a>
             <a href="/ready-to-wear" className={`border-b-2 pb-1 transition-all ${
-              isScrolled 
+              isActive
                 ? 'border-transparent hover:border-black text-black' 
                 : 'border-transparent hover:border-white text-white'
             }`}>READY TO WEAR</a>
             <a href="/bridal" className={`border-b-2 pb-1 transition-all ${
-              isScrolled 
+              isActive
                 ? 'border-transparent hover:border-black text-black' 
                 : 'border-transparent hover:border-white text-white'
             }`}>BRIDAL</a>
             <a href="/accessories" className={`border-b-2 pb-1 transition-all ${
-              isScrolled 
+              isActive
                 ? 'border-transparent hover:border-black text-black' 
                 : 'border-transparent hover:border-white text-white'
             }`}>ACCESSORIES</a>
             <a href="/maison" className={`border-b-2 pb-1 transition-all ${
-              isScrolled 
+              isActive
                 ? 'border-transparent hover:border-black text-black' 
                 : 'border-transparent hover:border-white text-white'
             }`}>MAISON</a>
