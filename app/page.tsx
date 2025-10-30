@@ -13,7 +13,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
+    <div className="min-h-screen text-neutral-900">
       {/* Hero Section */}
       <section className="relative h-screen flex items-end justify-center overflow-hidden pt-40 bg-transparent pb-20">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover absolute inset-0">
