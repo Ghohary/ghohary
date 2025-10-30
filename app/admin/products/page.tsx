@@ -1,73 +1,92 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/utils/supabase';
 
 interface Product {
   id: number;
   name: string;
   price?: string;
-  sizes: string[];
-  colors: string[];
+  sizes: string;
+  colors: string;
   status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
-  category: 'couture' | 'ready-to-wear' | 'bridal' | 'accessories' | 'maison';
+  category: string;
 }
 
-const initialProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Celestial Gown',
-    price: '20,000 AED',
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: ['White', 'Ivory', 'Champagne'],
-    status: 'available',
-    category: 'couture'
-  },
-  {
-    id: 2,
-    name: 'Pearl Earrings',
-    price: '8,500 AED',
-    sizes: ['One Size'],
-    colors: ['Silver', 'Gold'],
-    status: 'available',
-    category: 'accessories'
-  }
-];
-
 export default function AdminProducts() {
-  const [productList, setProductList] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Product | null>(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase.from('products').select('*');
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+    setLoading(false);
+  };
+
+  const handleSave = async () => {
+    if (!formData) return;
+    
+    try {
+      if (editingId && editingId > 0) {
+        const { error } = await supabase
+          .from('products')
+          .update(formData)
+          .eq('id', editingId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('products')
+          .insert([{ ...formData, id: undefined }]);
+        if (error) throw error;
+      }
+      fetchProducts();
+      setEditingId(null);
+      setFormData(null);
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) throw error;
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
 
   const handleEdit = (product: Product) => {
     setEditingId(product.id);
     setFormData({ ...product });
   };
 
-  const handleSave = () => {
-    if (!formData) return;
-    setProductList(productList.map(p => p.id === formData.id ? formData : p));
-    setEditingId(null);
-    setFormData(null);
-  };
-
-  const handleDelete = (id: number) => {
-    setProductList(productList.filter(p => p.id !== id));
-  };
-
   const handleAddNew = () => {
-    const newProduct: Product = {
-      id: Math.max(...productList.map(p => p.id), 0) + 1,
-      name: 'New Product',
-      price: '0 AED',
-      sizes: ['One Size'],
-      colors: ['Black'],
+    setFormData({
+      id: 0,
+      name: '',
+      price: '',
+      sizes: '',
+      colors: '',
       status: 'available',
       category: 'couture'
-    };
-    setProductList([...productList, newProduct]);
-    setEditingId(newProduct.id);
-    setFormData(newProduct);
+    });
+    setEditingId(-1);
   };
+
+  if (loading) return <div className="p-8 text-center">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-white p-8">
@@ -81,114 +100,99 @@ export default function AdminProducts() {
           ADD NEW PRODUCT
         </button>
 
-        <div className="space-y-6">
-          {productList.map((product) => (
-            <div key={product.id} className="border-2 border-neutral-200 p-6">
-              {editingId === product.id && formData ? (
-                <div className="space-y-4">
+        {editingId !== null && formData && (
+          <div className="border-2 border-neutral-200 p-6 mb-8">
+            <h2 className="text-2xl font-light mb-4">Edit Product</h2>
+            <div className="space-y-4">
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-4 py-2 border border-neutral-300 text-sm"
+                placeholder="Product Name"
+              />
+
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="text-xs font-normal tracking-wide mb-2 block">PRICE</label>
                   <input
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={formData.price || ''}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     className="w-full px-4 py-2 border border-neutral-300 text-sm"
-                    placeholder="Product Name"
+                    placeholder="e.g., 20,000 AED"
                   />
-
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <label className="text-xs font-normal tracking-wide mb-2 block">PRICE</label>
-                      <input
-                        type="text"
-                        value={formData.price || ''}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        className="w-full px-4 py-2 border border-neutral-300 text-sm"
-                        placeholder="e.g., 45,000 AED"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="text-xs font-normal tracking-wide mb-2 block">STATUS</label>
-                      <select
-                        value={formData.status}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                        className="w-full px-4 py-2 border border-neutral-300 text-sm"
-                      >
-                        <option value="available">Available</option>
-                        <option value="preorder">Pre-Order</option>
-                        <option value="appointment">Appointment Only</option>
-                        <option value="hidden-price">Hidden Price</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-normal tracking-wide mb-2 block">SIZES</label>
-                    <input
-                      type="text"
-                      value={formData.sizes.join(', ')}
-                      onChange={(e) => setFormData({ ...formData, sizes: e.target.value.split(',').map(s => s.trim()) })}
-                      className="w-full px-4 py-2 border border-neutral-300 text-sm"
-                      placeholder="e.g., XS, S, M, L, XL"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-normal tracking-wide mb-2 block">COLORS</label>
-                    <input
-                      type="text"
-                      value={formData.colors.join(', ')}
-                      onChange={(e) => setFormData({ ...formData, colors: e.target.value.split(',').map(c => c.trim()) })}
-                      className="w-full px-4 py-2 border border-neutral-300 text-sm"
-                      placeholder="e.g., Black, White, Gold"
-                    />
-                  </div>
-
-                  <div className="flex gap-3">
-                    <button
-                      onClick={handleSave}
-                      className="flex-1 px-4 py-2 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900"
-                    >
-                      SAVE
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="flex-1 px-4 py-2 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50"
-                    >
-                      CANCEL
-                    </button>
-                  </div>
                 </div>
-              ) : (
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-light text-black mb-2">{product.name}</h3>
-                    <p className="text-xs text-neutral-600 mb-3">
-                      {product.price ? `Price: ${product.price}` : 'Price: Hidden'}
-                    </p>
-                    <p className="text-xs text-neutral-600 mb-1">Sizes: {product.sizes.join(', ')}</p>
-                    <p className="text-xs text-neutral-600 mb-3">Colors: {product.colors.join(', ')}</p>
-                    <div className="inline-block px-3 py-1 bg-neutral-100 text-xs font-light tracking-wide">
-                      {product.status === 'available' && 'Available'}
-                      {product.status === 'preorder' && 'Pre-Order'}
-                      {product.status === 'appointment' && 'Appointment Only'}
-                      {product.status === 'hidden-price' && 'Hidden Price'}
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleEdit(product)}
-                      className="px-4 py-2 border-2 border-black text-black text-xs font-light tracking-wider hover:bg-gray-50"
-                    >
-                      EDIT
-                    </button>
-                    <button
-                      onClick={() => handleDelete(product.id)}
-                      className="px-4 py-2 border-2 border-red-500 text-red-500 text-xs font-light tracking-wider hover:bg-red-50"
-                    >
-                      DELETE
-                    </button>
-                  </div>
+                <div className="flex-1">
+                  <label className="text-xs font-normal tracking-wide mb-2 block">STATUS</label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                    className="w-full px-4 py-2 border border-neutral-300 text-sm"
+                  >
+                    <option value="available">Available</option>
+                    <option value="preorder">Pre-Order</option>
+                    <option value="appointment">Appointment Only</option>
+                    <option value="hidden-price">Hidden Price</option>
+                  </select>
                 </div>
-              )}
+              </div>
+
+              <input
+                type="text"
+                value={formData.sizes}
+                onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
+                className="w-full px-4 py-2 border border-neutral-300 text-sm"
+                placeholder="Sizes (comma separated): XS, S, M, L, XL"
+              />
+
+              <input
+                type="text"
+                value={formData.colors}
+                onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
+                className="w-full px-4 py-2 border border-neutral-300 text-sm"
+                placeholder="Colors (comma separated): Black, White, Gold"
+              />
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSave}
+                  className="flex-1 px-4 py-2 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900"
+                >
+                  SAVE
+                </button>
+                <button
+                  onClick={() => setEditingId(null)}
+                  className="flex-1 px-4 py-2 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50"
+                >
+                  CANCEL
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-3">
+          {products.map((product) => (
+            <div key={product.id} className="border border-neutral-200 p-4 flex justify-between items-center">
+              <div>
+                <h3 className="font-light text-black">{product.name}</h3>
+                <p className="text-xs text-neutral-600">{product.price || 'Hidden Price'} • {product.status}</p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleEdit(product)}
+                  className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-gray-50"
+                >
+                  EDIT
+                </button>
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  className="px-4 py-2 border-2 border-red-500 text-red-500 text-xs font-light hover:bg-red-50"
+                >
+                  DELETE
+                </button>
+              </div>
             </div>
           ))}
         </div>
