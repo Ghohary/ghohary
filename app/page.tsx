@@ -111,21 +111,16 @@ export default function Home() {
 
           <button
             onClick={toggleMute}
-            className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 relative"
+            className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
           >
             {!isMuted ? (
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
               </svg>
             ) : (
-              <div className="relative w-5 h-5 flex items-center justify-center">
-                <svg className="w-5 h-5 absolute" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                </svg>
-                <svg className="w-6 h-6 absolute" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16107758 C3.34915502,0.9039803 2.40734225,0.9039803 1.77946707,1.4142347 C0.994623095,2.0760508 0.837654326,3.16346283 1.15159189,3.94894976 L3.03521743,10.3899429 C3.03521743,10.5470402 3.19218622,10.7041376 3.50612381,10.7041376 L16.6915026,11.4896245 C16.6915026,11.4896245 17.1624089,11.4896245 17.1624089,12.0287387 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
+              </svg>
             )}
           </button>
         </div>
