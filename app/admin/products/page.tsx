@@ -261,7 +261,7 @@ export default function AdminProducts() {
               <div key={product.id} className="bg-white p-6 border-2 border-gray-300 rounded flex justify-between items-center">
                 <div>
                   <h3 className="font-bold text-lg text-black">{product.name}</h3>
-                  <p className="text-base text-black font-semibold">{product.price || 'Hidden Price'} • {product.status} • Inventory: {product.inventory}</p>
+                  <p className="text-base text-black font-semibold">{product.price ? `${product.price} AED` : 'Hidden Price'} • {product.status} • Inventory: {product.inventory}</p>
                 </div>
                 <div className="flex gap-4">
                   <button
