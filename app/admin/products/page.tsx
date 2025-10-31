@@ -11,6 +11,7 @@ interface Product {
   status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
   category: string;
   inventory: number;
+  image?: string;
 }
 
 export default function AdminProducts() {
@@ -19,6 +20,7 @@ export default function AdminProducts() {
   const [formData, setFormData] = useState<Product | null>(null);
   const [jsonInput, setJsonInput] = useState('');
   const [showJsonImport, setShowJsonImport] = useState(false);
+  const [priceInput, setPriceInput] = useState('');
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
@@ -28,6 +30,27 @@ export default function AdminProducts() {
   const saveProducts = (newProducts: Product[]) => {
     setProducts(newProducts);
     localStorage.setItem('products', JSON.stringify(newProducts));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (formData) {
+          setFormData({ ...formData, image: reader.result as string });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handlePriceChange = (value: string) => {
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setPriceInput(numericValue);
+    if (formData) {
+      setFormData({ ...formData, price: numericValue ? `${numericValue}` : '' });
+    }
   };
 
   const handleSave = () => {
@@ -41,6 +64,7 @@ export default function AdminProducts() {
     }
     setEditingId(null);
     setFormData(null);
+    setPriceInput('');
   };
 
   const handleDelete = (id: number) => {
@@ -50,6 +74,7 @@ export default function AdminProducts() {
   const handleEdit = (product: Product) => {
     setEditingId(product.id);
     setFormData({ ...product });
+    setPriceInput(product.price?.replace(/[^0-9]/g, '') || '');
   };
 
   const handleAddNew = () => {
@@ -61,9 +86,11 @@ export default function AdminProducts() {
       colors: '',
       status: 'available',
       category: 'couture',
-      inventory: 0
+      inventory: 0,
+      image: ''
     });
     setEditingId(-1);
+    setPriceInput('');
   };
 
   const handleJsonImport = () => {
@@ -123,7 +150,7 @@ export default function AdminProducts() {
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
               className="w-full px-4 py-3 border-2 border-gray-300 text-base font-mono h-64 mb-4 text-black"
-              placeholder='[{"name":"Product 1","price":"1000 AED","sizes":"S,M,L","colors":"Black,White","status":"available","category":"couture","inventory":10}]'
+              placeholder='[{"name":"Product 1","price":"1000","sizes":"S,M,L","colors":"Black,White","status":"available","category":"couture","inventory":10}]'
             />
             <div className="flex gap-3">
               <button
@@ -153,20 +180,25 @@ export default function AdminProducts() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded"
-                  placeholder="Brown Empress"
+                  placeholder="Golden Empress"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-black font-bold mb-2">PRICE</label>
-                  <input
-                    type="text"
-                    value={formData.price || ''}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded"
-                    placeholder="2800 AED"
-                  />
+                  <label className="block text-black font-bold mb-2">PRICE (numbers only)</label>
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      value={priceInput}
+                      onChange={(e) => handlePriceChange(e.target.value)}
+                      className="flex-1 px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded-l"
+                      placeholder="2800"
+                    />
+                    <span className="px-4 py-3 bg-gray-200 text-black font-bold border-2 border-gray-300 border-l-0 rounded-r">
+                      AED
+                    </span>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-black font-bold mb-2">INVENTORY</label>
@@ -228,8 +260,24 @@ export default function AdminProducts() {
                   value={formData.colors}
                   onChange={(e) => setFormData({ ...formData, colors: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded"
-                  placeholder="Brown"
+                  placeholder="Gold, Silver"
                 />
+              </div>
+
+              <div>
+                <label className="block text-black font-bold mb-2">PRODUCT IMAGE</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded bg-white cursor-pointer"
+                />
+                {formData.image && (
+                  <div className="mt-4">
+                    <p className="text-black font-bold mb-2">Image Preview:</p>
+                    <img src={formData.image} alt="Preview" className="w-48 h-64 object-cover rounded border-2 border-gray-300" />
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-4 pt-4">
@@ -258,10 +306,15 @@ export default function AdminProducts() {
             </div>
           ) : (
             products.map((product) => (
-              <div key={product.id} className="bg-white p-6 border-2 border-gray-300 rounded flex justify-between items-center">
-                <div>
-                  <h3 className="font-bold text-lg text-black">{product.name}</h3>
-                  <p className="text-base text-black font-semibold">{product.price ? `${product.price} AED` : 'Hidden Price'} • {product.status} • Inventory: {product.inventory}</p>
+              <div key={product.id} className="bg-white p-6 border-2 border-gray-300 rounded">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <h3 className="font-bold text-lg text-black">{product.name}</h3>
+                    <p className="text-base text-black font-semibold">{product.price ? `${product.price} AED` : 'Hidden Price'} • {product.status} • Inventory: {product.inventory}</p>
+                  </div>
+                  {product.image && (
+                    <img src={product.image} alt={product.name} className="w-24 h-32 object-cover rounded border border-gray-300 ml-4" />
+                  )}
                 </div>
                 <div className="flex gap-4">
                   <button
