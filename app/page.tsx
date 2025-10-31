@@ -82,14 +82,14 @@ export default function Home() {
         </video>
         
         <div className="relative z-10 flex flex-col items-center">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-light tracking-widest text-white mb-2">SPRING-SUMMER</h1>
-            <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white">COLLECTION 2026</p>
+            <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white mb-8">COLLECTION 2026</p>
+            
+            <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg">
+              SEE THE NEW COLLECTION
+            </button>
           </div>
-          
-          <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg mb-16">
-            SEE THE NEW COLLECTION
-          </button>
         </div>
 
         {/* Video Controls */}
