@@ -14,6 +14,7 @@ interface Product {
   status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
   category: string;
   inventory: number;
+  image?: string;
 }
 
 export default function CouturePage() {
@@ -97,7 +98,7 @@ export default function CouturePage() {
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden pt-40">
-        <div className="absolute inset-0 bg-linear-to-b from-stone-100 via-stone-50 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-stone-100 via-stone-50 to-white"></div>
         
         <div className="relative z-10 text-center px-8 max-w-6xl mx-auto">
           <div className="mb-8 text-amber-700 text-xs tracking-[0.4em] font-light">
@@ -121,12 +122,18 @@ export default function CouturePage() {
               {products.map((product, i) => (
                 <div key={product.id} className="group cursor-pointer" onClick={() => setSelectedProduct(product)}>
                   <div className="relative aspect-3/4 bg-stone-100 mb-6 overflow-hidden">
-                    <img 
-                      src="/products/gown-1.jpg"
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => handleImageError(i)(e)}
-                    />
+                    {product.image ? (
+                      <img 
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => handleImageError(i)(e)}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-6xl text-stone-300 bg-stone-100">
+                        {i + 1}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <h3 className="text-lg font-light text-black group-hover:underline transition-all">
@@ -139,7 +146,7 @@ export default function CouturePage() {
                       Sizes: {product.sizes}
                     </div>
                     <p className="text-base font-normal text-black pt-2">
-                      {product.price || 'Price Upon Request'}
+                      {product.price ? `${product.price} AED` : 'Price Upon Request'}
                     </p>
                     <div className="text-[10px] text-neutral-500 pt-1">
                       {product.status === 'available' && <span className="text-green-600">✓ Available</span>}
@@ -180,10 +187,14 @@ export default function CouturePage() {
           <div className="bg-white max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setSelectedProduct(null)} className="float-right text-2xl font-light text-black hover:text-neutral-600">×</button>
             
+            {selectedProduct.image && (
+              <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-96 object-cover rounded mb-6 border border-gray-300" />
+            )}
+            
             <h2 className="text-3xl font-light text-black mb-4">{selectedProduct.name}</h2>
             
             {selectedProduct.price && (
-              <p className="text-lg font-normal text-black mb-4">{selectedProduct.price}</p>
+              <p className="text-lg font-normal text-black mb-4">{selectedProduct.price} AED</p>
             )}
             
             {!selectedProduct.price && (
