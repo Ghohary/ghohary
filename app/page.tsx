@@ -36,9 +36,9 @@ const initialProducts: Product[] = [
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState({ hero: true, video2: true, video3: true, video4: true });
+  const [isMuted, setIsMuted] = useState({ hero: true, video2: true, video3: true, video4: true });
+  const videoRefs = useRef({ hero: null as HTMLVideoElement | null, video2: null as HTMLVideoElement | null, video3: null as HTMLVideoElement | null, video4: null as HTMLVideoElement | null });
 
   const handleImageError = (i: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
@@ -48,33 +48,69 @@ export default function Home() {
     }
   };
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
+  const togglePlay = (videoId: 'hero' | 'video2' | 'video3' | 'video4') => {
+    const video = videoRefs.current[videoId];
+    if (video) {
+      if (isPlaying[videoId]) {
+        video.pause();
       } else {
-        videoRef.current.play();
+        video.play();
       }
-      setIsPlaying(!isPlaying);
+      setIsPlaying({ ...isPlaying, [videoId]: !isPlaying[videoId] });
     }
   };
 
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
+  const toggleMute = (videoId: 'hero' | 'video2' | 'video3' | 'video4') => {
+    const video = videoRefs.current[videoId];
+    if (video) {
+      video.muted = !isMuted[videoId];
+      setIsMuted({ ...isMuted, [videoId]: !isMuted[videoId] });
     }
   };
+
+  const VideoControls = ({ videoId }: { videoId: 'hero' | 'video2' | 'video3' | 'video4' }) => (
+    <div className="absolute bottom-8 left-8 z-20 flex gap-4">
+      <button
+        onClick={() => togglePlay(videoId)}
+        className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+      >
+        {isPlaying[videoId] ? (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+          </svg>
+        ) : (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        )}
+      </button>
+
+      <button
+        onClick={() => toggleMute(videoId)}
+        className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+      >
+        {!isMuted[videoId] ? (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+          </svg>
+        ) : (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3z" />
+          </svg>
+        )}
+      </button>
+    </div>
+  );
 
   return (
     <div className="text-neutral-900">
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-end overflow-hidden -mt-24 pb-24">
         <video 
-          ref={videoRef}
+          ref={(el) => { if (el) videoRefs.current.hero = el; }}
           autoPlay 
           loop 
-          muted={isMuted}
+          muted={isMuted.hero}
           playsInline 
           className="w-full h-full object-cover absolute inset-0"
         >
@@ -92,38 +128,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Video Controls */}
-        <div className="absolute bottom-8 left-8 z-20 flex gap-4">
-          <button
-            onClick={togglePlay}
-            className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
-          >
-            {isPlaying ? (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            )}
-          </button>
-
-          <button
-            onClick={toggleMute}
-            className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
-          >
-            {!isMuted ? (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 9v6h4l5 5V4L7 9H3z" />
-              </svg>
-            )}
-          </button>
-        </div>
+        <VideoControls videoId="hero" />
       </section>
 
       {/* Products Section 1 */}
@@ -154,9 +159,17 @@ export default function Home() {
 
       {/* Video Section 2 */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gray-300">
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+        <video 
+          ref={(el) => { if (el) videoRefs.current.video2 = el; }}
+          autoPlay 
+          loop 
+          muted={isMuted.video2}
+          playsInline 
+          className="w-full h-full object-cover"
+        >
           <source src="/embroidery-video.mp4" type="video/mp4" />
         </video>
+        <VideoControls videoId="video2" />
       </section>
 
       {/* Products Section 2 */}
@@ -187,16 +200,32 @@ export default function Home() {
 
       {/* Video Section 3 */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gray-300">
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+        <video 
+          ref={(el) => { if (el) videoRefs.current.video3 = el; }}
+          autoPlay 
+          loop 
+          muted={isMuted.video3}
+          playsInline 
+          className="w-full h-full object-cover"
+        >
           <source src="/section-video.mp4" type="video/mp4" />
         </video>
+        <VideoControls videoId="video3" />
       </section>
 
       {/* Video Section 4 */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gray-300">
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+        <video 
+          ref={(el) => { if (el) videoRefs.current.video4 = el; }}
+          autoPlay 
+          loop 
+          muted={isMuted.video4}
+          playsInline 
+          className="w-full h-full object-cover"
+        >
           <source src="/section-video.mp4" type="video/mp4" />
         </video>
+        <VideoControls videoId="video4" />
       </section>
 
       {/* Product Modal */}
