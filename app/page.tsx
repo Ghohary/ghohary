@@ -72,7 +72,7 @@ export default function Home() {
     <div className="absolute bottom-8 left-8 z-20 flex gap-4">
       <button
         onClick={() => togglePlay(videoId)}
-        className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+        className="w-12 h-12 rounded-2xl border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
       >
         {isPlaying[videoId] ? (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -87,7 +87,7 @@ export default function Home() {
 
       <button
         onClick={() => toggleMute(videoId)}
-        className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+        className="w-12 h-12 rounded-2xl border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
       >
         {!isMuted[videoId] ? (
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -152,7 +152,7 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
+            <button className="px-6 py-2 rounded-2xl border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
           </div>
         </div>
       </section>
@@ -193,7 +193,7 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
+            <button className="px-6 py-2 rounded-2xl border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
           </div>
         </div>
       </section>
