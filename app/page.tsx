@@ -17,7 +17,7 @@ const initialProducts: Product[] = [
   {
     id: 1,
     name: 'Celestial Gown',
-    price: '45,000 AED',
+    price: '20,000 AED',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     colors: ['White', 'Ivory', 'Champagne'],
     status: 'available',
@@ -31,36 +31,14 @@ const initialProducts: Product[] = [
     colors: ['Silver', 'Gold'],
     status: 'available',
     category: 'accessories'
-  },
-  {
-    id: 3,
-    name: 'Silk Gloves',
-    price: '2,200 AED',
-    sizes: ['S', 'M', 'L'],
-    colors: ['Black', 'White', 'Cream'],
-    status: 'available',
-    category: 'accessories'
-  },
-  {
-    id: 4,
-    name: 'Crystal Clutch',
-    sizes: ['One Size'],
-    colors: ['Black', 'Gold'],
-    status: 'hidden-price',
-    category: 'accessories'
-  },
-  {
-    id: 5,
-    name: 'Bridal Gown',
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'Custom'],
-    colors: ['White', 'Ivory'],
-    status: 'appointment',
-    category: 'bridal'
   }
 ];
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useState<HTMLVideoElement | null>(null)[1];
 
   const handleImageError = (i: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
@@ -70,16 +48,71 @@ export default function Home() {
     }
   };
 
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+  };
+
   return (
     <div className="text-neutral-900">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-end justify-center overflow-hidden pb-20 -mt-24">
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover absolute inset-0">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden -mt-24">
+        <video 
+          autoPlay 
+          loop 
+          muted={isMuted}
+          playsInline 
+          className="w-full h-full object-cover absolute inset-0"
+          ref={videoRef as any}
+        >
           <source src="/third.mp4" type="video/mp4" />
         </video>
-        <div className="relative z-10 text-center">
-          <h1 className="text-6xl md:text-7xl font-light tracking-widest text-white mb-4">SPRING-SUMMER</h1>
-          <p className="text-3xl md:text-4xl font-light tracking-[0.3em] text-white">COLLECTION 2026</p>
+        
+        <div className="relative z-10 flex flex-col items-center justify-center h-full">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-light tracking-widest text-white mb-2">SPRING-SUMMER</h1>
+            <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white">COLLECTION 2026</p>
+          </div>
+          
+          <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 mb-16">
+            SEE THE NEW COLLECTION
+          </button>
+        </div>
+
+        {/* Video Controls */}
+        <div className="absolute bottom-8 left-8 z-20 flex gap-4">
+          <button
+            onClick={togglePlay}
+            className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+          >
+            {isPlaying ? (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            )}
+          </button>
+
+          <button
+            onClick={toggleMute}
+            className="w-12 h-12 rounded-full border-2 border-white text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+          >
+            {isMuted ? (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16107758 C3.34915502,0.9039803 2.40734225,0.9039803 1.77946707,1.4142347 C0.994623095,2.0760508 0.837654326,3.16346283 1.15159189,3.94894976 L3.03521743,10.3899429 C3.03521743,10.5470402 3.19218622,10.7041376 3.50612381,10.7041376 L16.6915026,11.4896245 C16.6915026,11.4896245 17.1624089,11.4896245 17.1624089,12.0287387 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+              </svg>
+            )}
+          </button>
         </div>
       </section>
 
@@ -120,7 +153,7 @@ export default function Home() {
       <section className="bg-stone-50 py-24">
         <div className="px-8">
           <div className="grid grid-cols-4 gap-8">
-            {initialProducts.slice(4).map((product, i) => (
+            {initialProducts.slice(0, 4).map((product, i) => (
               <div key={product.id} className="group cursor-pointer">
                 <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
                   <img src={`/products/gown-${i + 2}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
