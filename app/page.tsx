@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface Product {
   id: number;
@@ -38,7 +38,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useState<HTMLVideoElement | null>(null)[1];
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleImageError = (i: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
@@ -49,35 +49,45 @@ export default function Home() {
   };
 
   const togglePlay = () => {
-    setIsPlaying(!isPlaying);
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
   };
 
   return (
     <div className="text-neutral-900">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden -mt-24">
+      <section className="relative h-screen flex flex-col items-center justify-end overflow-hidden -mt-24 pb-24">
         <video 
+          ref={videoRef}
           autoPlay 
           loop 
           muted={isMuted}
           playsInline 
           className="w-full h-full object-cover absolute inset-0"
-          ref={videoRef as any}
         >
           <source src="/third.mp4" type="video/mp4" />
         </video>
         
-        <div className="relative z-10 flex flex-col items-center justify-center h-full">
-          <div className="text-center mb-16">
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-light tracking-widest text-white mb-2">SPRING-SUMMER</h1>
             <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white">COLLECTION 2026</p>
           </div>
           
-          <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 mb-16">
+          <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg mb-16">
             SEE THE NEW COLLECTION
           </button>
         </div>
