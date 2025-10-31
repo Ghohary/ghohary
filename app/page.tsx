@@ -23,7 +23,10 @@ export default function Home() {
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
-    if (saved) setProducts(JSON.parse(saved));
+    if (saved) {
+      const allProducts = JSON.parse(saved);
+      setProducts(allProducts);
+    }
   }, []);
 
   const handleImageError = (i: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -88,6 +91,9 @@ export default function Home() {
     </div>
   );
 
+  // Only show couture products on homepage
+  const couatureProducts = products.filter(p => p.category === 'couture').slice(0, 4);
+
   return (
     <div className="text-neutral-900">
       {/* Hero Section */}
@@ -120,26 +126,34 @@ export default function Home() {
       {/* Products Section 1 */}
       <section className="bg-white py-24">
         <div className="px-8">
-          <div className="grid grid-cols-4 gap-8">
-            {products.slice(0, 4).map((product, i) => (
-              <div key={product.id} className="group cursor-pointer">
-                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
-                  <img src={`/products/gown-${i + 1}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
-                </div>
-                <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
-                <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
-                <div className="text-[10px] text-neutral-600 mb-2">
-                  {product.status === 'available' && <span className="text-green-600">Available</span>}
-                  {product.status === 'preorder' && <span className="text-blue-600">Pre-Order</span>}
-                  {product.status === 'appointment' && <span className="text-purple-600">Appointment Only</span>}
-                  {product.status === 'hidden-price' && <span className="text-neutral-600">Inquire for Price</span>}
-                </div>
+          {couatureProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-4 gap-8">
+                {couatureProducts.map((product, i) => (
+                  <div key={product.id} className="group cursor-pointer" onClick={() => setSelectedProduct(product)}>
+                    <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3">
+                      <img src={`/products/gown-1.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
+                    </div>
+                    <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
+                    <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
+                    <div className="text-[10px] text-neutral-600 mb-2">
+                      {product.status === 'available' && <span className="text-green-600">Available</span>}
+                      {product.status === 'preorder' && <span className="text-blue-600">Pre-Order</span>}
+                      {product.status === 'appointment' && <span className="text-purple-600">Appointment Only</span>}
+                      {product.status === 'hidden-price' && <span className="text-neutral-600">Inquire for Price</span>}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
-          </div>
+              <div className="mt-12 text-center">
+                <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-neutral-600">No couture products yet</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -161,26 +175,34 @@ export default function Home() {
       {/* Products Section 2 */}
       <section className="bg-stone-50 py-24">
         <div className="px-8">
-          <div className="grid grid-cols-4 gap-8">
-            {products.slice(4, 8).map((product, i) => (
-              <div key={product.id} className="group cursor-pointer">
-                <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
-                  <img src={`/products/gown-${i + 5}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
-                </div>
-                <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
-                <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
-                <div className="text-[10px] text-neutral-600 mb-2">
-                  {product.status === 'available' && <span className="text-green-600">Available</span>}
-                  {product.status === 'preorder' && <span className="text-blue-600">Pre-Order</span>}
-                  {product.status === 'appointment' && <span className="text-purple-600">Appointment Only</span>}
-                  {product.status === 'hidden-price' && <span className="text-neutral-600">Inquire for Price</span>}
-                </div>
+          {products.length > 0 ? (
+            <>
+              <div className="grid grid-cols-4 gap-8">
+                {products.slice(0, 4).map((product, i) => (
+                  <div key={product.id} className="group cursor-pointer" onClick={() => setSelectedProduct(product)}>
+                    <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3">
+                      <img src={`/products/gown-1.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
+                    </div>
+                    <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
+                    <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
+                    <div className="text-[10px] text-neutral-600 mb-2">
+                      {product.status === 'available' && <span className="text-green-600">Available</span>}
+                      {product.status === 'preorder' && <span className="text-blue-600">Pre-Order</span>}
+                      {product.status === 'appointment' && <span className="text-purple-600">Appointment Only</span>}
+                      {product.status === 'hidden-price' && <span className="text-neutral-600">Inquire for Price</span>}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
-          </div>
+              <div className="mt-12 text-center">
+                <button className="px-6 py-2 rounded-full border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 text-xs tracking-wider font-light">DISCOVER THE COLLECTION</button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-neutral-600">No products yet</p>
+            </div>
+          )}
         </div>
       </section>
 
