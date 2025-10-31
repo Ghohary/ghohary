@@ -1,44 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface Product {
   id: number;
   name: string;
   price?: string;
-  sizes: string[];
-  colors: string[];
+  sizes: string;
+  colors: string;
   status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
-  category: 'couture' | 'ready-to-wear' | 'bridal' | 'accessories' | 'maison';
+  category: string;
+  inventory: number;
 }
 
-const initialProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Celestial Gown',
-    price: '20,000 AED',
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: ['White', 'Ivory', 'Champagne'],
-    status: 'available',
-    category: 'couture'
-  },
-  {
-    id: 2,
-    name: 'Pearl Earrings',
-    price: '8,500 AED',
-    sizes: ['One Size'],
-    colors: ['Silver', 'Gold'],
-    status: 'available',
-    category: 'accessories'
-  }
-];
-
 export default function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isPlaying, setIsPlaying] = useState({ hero: true, video2: true, video3: true, video4: true });
   const [isMuted, setIsMuted] = useState({ hero: true, video2: true, video3: true, video4: true });
   const videoRefs = useRef({ hero: null as HTMLVideoElement | null, video2: null as HTMLVideoElement | null, video3: null as HTMLVideoElement | null, video4: null as HTMLVideoElement | null });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('products');
+    if (saved) setProducts(JSON.parse(saved));
+  }, []);
 
   const handleImageError = (i: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
@@ -122,7 +108,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl font-light tracking-widest text-white mb-2">SPRING-SUMMER</h1>
             <p className="text-xl md:text-2xl font-light tracking-[0.2em] text-white mb-8">COLLECTION 2026</p>
             
-            <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg">
+            <button className="px-12 py-3 border-2 border-white text-white font-light text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-full">
               SEE THE NEW COLLECTION
             </button>
           </div>
@@ -135,7 +121,7 @@ export default function Home() {
       <section className="bg-white py-24">
         <div className="px-8">
           <div className="grid grid-cols-4 gap-8">
-            {initialProducts.slice(0, 4).map((product, i) => (
+            {products.slice(0, 4).map((product, i) => (
               <div key={product.id} className="group cursor-pointer">
                 <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
                   <img src={`/products/gown-${i + 1}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
@@ -176,10 +162,10 @@ export default function Home() {
       <section className="bg-stone-50 py-24">
         <div className="px-8">
           <div className="grid grid-cols-4 gap-8">
-            {initialProducts.slice(0, 4).map((product, i) => (
+            {products.slice(4, 8).map((product, i) => (
               <div key={product.id} className="group cursor-pointer">
                 <div className="relative aspect-square bg-stone-100 overflow-hidden mb-3" onClick={() => setSelectedProduct(product)}>
-                  <img src={`/products/gown-${i + 2}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
+                  <img src={`/products/gown-${i + 5}.jpg`} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError={handleImageError(i)} />
                 </div>
                 <h3 className="text-xs font-light text-black mb-1 group-hover:underline transition-all">{product.name}</h3>
                 <p className="text-xs font-normal text-black mb-2">{product.price || 'Price Upon Request'}</p>
@@ -257,9 +243,9 @@ export default function Home() {
             <div className="mb-6">
               <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">SIZES</h3>
               <div className="flex flex-wrap gap-2">
-                {selectedProduct.sizes.map((size) => (
+                {selectedProduct.sizes.split(',').map((size) => (
                   <button key={size} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
-                    {size}
+                    {size.trim()}
                   </button>
                 ))}
               </div>
@@ -268,9 +254,9 @@ export default function Home() {
             <div className="mb-6">
               <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">COLORS</h3>
               <div className="flex flex-wrap gap-2">
-                {selectedProduct.colors.map((color) => (
+                {selectedProduct.colors.split(',').map((color) => (
                   <button key={color} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
-                    {color}
+                    {color.trim()}
                   </button>
                 ))}
               </div>
