@@ -14,6 +14,20 @@ interface Product {
   image?: string;
 }
 
+const DEFAULT_PRODUCTS: Product[] = [
+  {
+    id: 1,
+    name: 'Brown Crystal Hearts',
+    price: '2800',
+    sizes: '36, 38, 40, 42',
+    colors: 'Brown',
+    status: 'available',
+    category: 'couture',
+    inventory: 2,
+    image: ''
+  }
+];
+
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -24,7 +38,12 @@ export default function AdminProducts() {
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
-    if (saved) setProducts(JSON.parse(saved));
+    if (saved) {
+      setProducts(JSON.parse(saved));
+    } else {
+      setProducts(DEFAULT_PRODUCTS);
+      localStorage.setItem('products', JSON.stringify(DEFAULT_PRODUCTS));
+    }
   }, []);
 
   const saveProducts = (newProducts: Product[]) => {
@@ -180,7 +199,7 @@ export default function AdminProducts() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded"
-                  placeholder="Golden Empress"
+                  placeholder="Product Name"
                 />
               </div>
 
