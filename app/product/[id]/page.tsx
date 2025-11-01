@@ -72,6 +72,10 @@ export default function ProductPage() {
     return colorMap[color.toLowerCase()] || '#ccc';
   };
 
+  const formatPrice = (price: string): string => {
+    return `${price},00 AED`;
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <nav className="fixed top-0 w-full z-50 bg-stone-50/95 backdrop-blur-md border-b border-neutral-200">
@@ -165,7 +169,7 @@ export default function ProductPage() {
 
               <div className="pb-6 border-b border-neutral-200">
                 <p className="text-xl font-normal text-black">
-                  {product.price ? `${product.price} AED` : 'Price Upon Request'}
+                  {product.price ? formatPrice(product.price) : 'Price Upon Request'}
                 </p>
               </div>
 
