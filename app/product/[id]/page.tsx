@@ -15,9 +15,6 @@ interface Product {
   category: string;
   inventory: number;
   images?: string[];
-  description?: string;
-  materials?: string;
-  details?: string[];
 }
 
 export default function ProductPage() {
@@ -89,21 +86,21 @@ export default function ProductPage() {
               product.images.map((img, idx) => (
                 <div 
                   key={idx} 
-                  className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
+                  className="relative bg-stone-100 h-screen flex items-center justify-center overflow-hidden"
                   onMouseEnter={() => setSelectedImage(idx)}
                 >
                   <img 
                     src={img} 
                     alt={`${product.name} - View ${idx + 1}`}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-contain"
                   />
-                  <div className="absolute bottom-6 left-6 text-white text-xs tracking-wider font-light">
+                  <div className="absolute bottom-6 left-6 text-black text-xs tracking-wider font-light">
                     {String(idx + 1).padStart(2, '0')} / {String((product.images?.length || 1)).padStart(2, '0')}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="relative bg-white h-screen flex items-center justify-center">
+              <div className="relative bg-stone-100 h-screen flex items-center justify-center">
                 <span className="text-6xl text-stone-300">1</span>
               </div>
             )}
@@ -111,8 +108,8 @@ export default function ProductPage() {
         </div>
 
         {/* Right Side - Details (40%) STICKY */}
-        <div className="w-2/5 bg-white">
-          <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12 border-l border-neutral-200">
+        <div className="w-2/5 bg-white border-l border-neutral-200">
+          <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12">
             <div className="space-y-8">
               {/* Product Name */}
               <div>
@@ -185,7 +182,7 @@ export default function ProductPage() {
                 </button>
               </div>
 
-              {/* Description & Details */}
+              {/* Details */}
               <div className="space-y-6 pt-8 border-t border-neutral-200">
                 <div>
                   <button 
@@ -197,7 +194,7 @@ export default function ProductPage() {
                   </button>
                   {expanded && (
                     <div className="pt-4 space-y-3 text-sm font-light text-neutral-700 leading-relaxed">
-                      <p>This exquisite couture piece represents the pinnacle of craftsmanship and luxury design. Meticulously handcrafted with the finest materials and attention to detail, each element is carefully considered to create a timeless masterpiece.</p>
+                      <p>This exquisite couture piece represents the pinnacle of craftsmanship and luxury design. Meticulously handcrafted with the finest materials and attention to detail.</p>
                       <ul className="space-y-2 pt-4">
                         <li>• Bespoke couture collection</li>
                         <li>• Hand-selected premium materials</li>
