@@ -77,26 +77,59 @@ export default function ProductPage() {
       <nav className="fixed top-0 w-full z-50 bg-stone-50/95 backdrop-blur-md border-b border-neutral-200">
         <div className="w-full px-8">
           <div className="relative text-center py-6 flex items-center justify-between">
-            <Link href="/couture" className="text-black hover:text-amber-700 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
+            <div className="flex items-center gap-6">
+              <button className="text-black hover:text-amber-700 transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <button className="text-black hover:text-amber-700 transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </div>
             
             <Link href="/" className="absolute left-1/2 transform -translate-x-1/2 text-4xl tracking-[0.3em] font-serif text-black hover:text-amber-700 transition-colors">
               GHOHARY
             </Link>
             
-            <button className="text-black hover:text-amber-700 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-6">
+              <button className="text-black hover:text-amber-700 transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </button>
+              <button className="text-black hover:text-amber-700 transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </button>
+              <button className="text-black hover:text-amber-700 transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </button>
+              <button className="text-black hover:text-amber-700 transition-colors relative">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span className="absolute -top-1 -right-1 bg-amber-700 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">0</span>
+              </button>
+            </div>
+          </div>
+          
+          <div className="flex justify-center gap-12 pb-5 text-sm tracking-[0.25em] font-light text-black">
+            <Link href="/couture" className="hover:text-amber-700 transition-colors duration-300">COUTURE</Link>
+            <Link href="/ready-to-wear" className="hover:text-amber-700 transition-colors duration-300">READY TO WEAR</Link>
+            <Link href="/bridal" className="hover:text-amber-700 transition-colors duration-300">BRIDAL</Link>
+            <Link href="/accessories" className="hover:text-amber-700 transition-colors duration-300">ACCESSORIES</Link>
+            <Link href="/maison" className="hover:text-amber-700 transition-colors duration-300">MAISON</Link>
           </div>
         </div>
       </nav>
 
-      <div className="pt-20 flex min-h-screen">
+      <div className="pt-32 flex min-h-screen">
         <div className="w-1/2 bg-stone-100 overflow-y-auto">
           <div className="space-y-0">
             {images.map((img, idx) => (
@@ -131,7 +164,7 @@ export default function ProductPage() {
               </div>
 
               <div className="pb-6 border-b border-neutral-200">
-                <p className="text-3xl font-normal text-black">
+                <p className="text-xl font-normal text-black">
                   {product.price ? `${product.price} AED` : 'Price Upon Request'}
                 </p>
               </div>
