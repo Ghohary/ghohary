@@ -151,8 +151,8 @@ export default function ProductPage() {
           </div>
         </div>
 
-        <div className="w-1/2 bg-white border-l border-neutral-200 overflow-y-auto">
-          <div className="p-12 pb-20">
+        <div className="w-1/2 bg-white border-l border-neutral-200">
+          <div className="sticky top-32 h-[calc(100vh-128px)] overflow-y-auto p-12">
             <div className="space-y-8">
               <div>
                 <h1 className="text-4xl font-light text-black mb-3">{product.name}</h1>
@@ -269,7 +269,7 @@ export default function ProductPage() {
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-neutral-200 pb-12">
+              <div className="pt-6 border-t border-neutral-200">
                 <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
                 <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
               </div>
