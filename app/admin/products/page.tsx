@@ -11,7 +11,7 @@ interface Product {
   status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
   category: string;
   inventory: number;
-  image?: string;
+  images?: string[];
 }
 
 const DEFAULT_PRODUCTS: Product[] = [
@@ -24,7 +24,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     status: 'available',
     category: 'couture',
     inventory: 2,
-    image: ''
+    images: []
   }
 ];
 
@@ -51,16 +51,27 @@ export default function AdminProducts() {
     localStorage.setItem('products', JSON.stringify(newProducts));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (formData) {
-          setFormData({ ...formData, image: reader.result as string });
-        }
-      };
-      reader.readAsDataURL(file);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
+    const files = e.target.files;
+    if (files) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (formData) {
+            const images = formData.images || [];
+            images.push(reader.result as string);
+            setFormData({ ...formData, images });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const removeImage = (index: number) => {
+    if (formData && formData.images) {
+      const newImages = formData.images.filter((_, i) => i !== index);
+      setFormData({ ...formData, images: newImages });
     }
   };
 
@@ -106,7 +117,7 @@ export default function AdminProducts() {
       status: 'available',
       category: 'couture',
       inventory: 0,
-      image: ''
+      images: []
     });
     setEditingId(-1);
     setPriceInput('');
@@ -169,7 +180,7 @@ export default function AdminProducts() {
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
               className="w-full px-4 py-3 border-2 border-gray-300 text-base font-mono h-64 mb-4 text-black"
-              placeholder='[{"name":"Product 1","price":"1000","sizes":"S,M,L","colors":"Black,White","status":"available","category":"couture","inventory":10}]'
+              placeholder='[{"name":"Product 1","price":"1000","sizes":"S,M,L","colors":"Black,White","status":"available","category":"couture","inventory":10,"images":[]}]'
             />
             <div className="flex gap-3">
               <button
@@ -284,20 +295,35 @@ export default function AdminProducts() {
               </div>
 
               <div>
-                <label className="block text-black font-bold mb-2">PRODUCT IMAGE</label>
+                <label className="block text-black font-bold mb-2">PRODUCT IMAGES (upload 3-5 images)</label>
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleImageUpload}
                   className="w-full px-4 py-3 border-2 border-gray-300 text-black font-semibold text-base rounded bg-white cursor-pointer"
                 />
-                {formData.image && (
-                  <div className="mt-4">
-                    <p className="text-black font-bold mb-2">Image Preview:</p>
-                    <img src={formData.image} alt="Preview" className="w-48 h-64 object-cover rounded border-2 border-gray-300" />
-                  </div>
-                )}
+                <p className="text-sm text-gray-600 mt-2">You can select multiple images at once!</p>
               </div>
+
+              {formData.images && formData.images.length > 0 && (
+                <div>
+                  <h3 className="text-black font-bold mb-4">Image Gallery ({formData.images.length} images)</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {formData.images.map((image, idx) => (
+                      <div key={idx} className="relative group">
+                        <img src={image} alt={`Preview ${idx + 1}`} className="w-full h-40 object-cover rounded border-2 border-gray-300" />
+                        <button
+                          onClick={() => removeImage(idx)}
+                          className="absolute top-2 right-2 bg-red-600 text-white font-bold px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="flex gap-4 pt-4">
                 <button
@@ -330,9 +356,21 @@ export default function AdminProducts() {
                   <div className="flex-1">
                     <h3 className="font-bold text-lg text-black">{product.name}</h3>
                     <p className="text-base text-black font-semibold">{product.price ? `${product.price} AED` : 'Hidden Price'} • {product.status} • Inventory: {product.inventory}</p>
+                    {product.images && product.images.length > 0 && (
+                      <p className="text-sm text-gray-600 mt-2">📷 {product.images.length} images</p>
+                    )}
                   </div>
-                  {product.image && (
-                    <img src={product.image} alt={product.name} className="w-24 h-32 object-cover rounded border border-gray-300 ml-4" />
+                  {product.images && product.images.length > 0 && (
+                    <div className="flex gap-2 ml-4">
+                      {product.images.slice(0, 2).map((img, idx) => (
+                        <img key={idx} src={img} alt={`${product.name} ${idx + 1}`} className="w-16 h-20 object-cover rounded border border-gray-300" />
+                      ))}
+                      {product.images.length > 2 && (
+                        <div className="w-16 h-20 bg-gray-300 rounded border border-gray-300 flex items-center justify-center text-black font-bold">
+                          +{product.images.length - 2}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div className="flex gap-4">
