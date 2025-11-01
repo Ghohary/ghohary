@@ -15,16 +15,16 @@ interface Product {
   category: string;
   inventory: number;
   images?: string[];
+  sku?: string;
+  composition?: string;
 }
 
 export default function ProductPage() {
   const params = useParams();
   const productId = parseInt(params.id as string);
   const [product, setProduct] = useState<Product | null>(null);
-  const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
@@ -54,12 +54,13 @@ export default function ProductPage() {
     );
   }
 
-  // Default placeholder images if no images provided
+  // Default placeholder images
   const defaultImages = Array(3).fill(null).map((_, i) => 
     `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23f5f5f5' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='%23ccc' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3E${i + 1}%3C/text%3E%3C/svg%3E`
   );
 
   const images = product.images && product.images.length > 0 ? product.images : defaultImages;
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
     <div className="min-h-screen bg-white">
@@ -93,7 +94,7 @@ export default function ProductPage() {
               <div 
                 key={idx} 
                 className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
-                onMouseEnter={() => setSelectedImage(idx)}
+                onMouseEnter={() => setSelectedImageIndex(idx)}
               >
                 <img 
                   src={img} 
@@ -108,115 +109,106 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Right Side - Details (50%) STICKY */}
+        {/* Right Side - Details (50%) */}
         <div className="w-1/2 bg-white border-l border-neutral-200">
           <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12">
-            <div className="space-y-8">
+            <div className="space-y-8 max-w-md">
               {/* Product Name */}
               <div>
-                <h1 className="text-3xl font-light text-black mb-6">{product.name}</h1>
+                <h1 className="text-2xl font-light text-black mb-3">{product.name}</h1>
+                <p className="text-xs text-neutral-600 tracking-wider font-light">SKU: {product.id}</p>
               </div>
 
-              {/* Price & Status */}
+              {/* Price */}
               <div>
-                <p className="text-2xl font-normal text-black mb-4">
+                <p className="text-2xl font-normal text-black">
                   {product.price ? `${product.price} AED` : 'Price Upon Request'}
                 </p>
-                <div className="inline-block px-4 py-2 bg-neutral-100 text-xs font-light tracking-widest">
-                  {product.status === 'available' && '✓ AVAILABLE'}
-                  {product.status === 'preorder' && 'PRE-ORDER'}
-                  {product.status === 'appointment' && 'APPOINTMENT ONLY'}
-                  {product.status === 'hidden-price' && 'INQUIRE FOR PRICE'}
-                </div>
               </div>
 
               {/* Size Selection */}
               <div>
-                <p className="text-xs font-normal tracking-[0.3em] text-black mb-4">SIZES</p>
-                <div className="grid grid-cols-3 gap-2 mb-4">
+                <label className="block text-xs font-normal tracking-[0.2em] text-black mb-3">SIZE</label>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
+                >
+                  <option value="">Select an option</option>
                   {product.sizes.split(',').map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size.trim())}
-                      className={`px-4 py-3 text-xs font-light border-2 transition-all ${
-                        selectedSize === size.trim()
-                          ? 'border-black bg-black text-white'
-                          : 'border-neutral-300 text-black hover:border-black'
-                      }`}
-                    >
+                    <option key={size} value={size.trim()}>
                       {size.trim()}
-                    </button>
+                    </option>
                   ))}
-                </div>
-                <button className="text-xs text-amber-700 hover:text-amber-800 font-light tracking-wider">
-                  SIZE GUIDE
+                </select>
+                <button className="text-xs text-amber-700 hover:text-amber-800 font-light tracking-wider mt-2">
+                  Size Guide
                 </button>
               </div>
 
               {/* Color Selection */}
               <div>
-                <p className="text-xs font-normal tracking-[0.3em] text-black mb-4">COLORS</p>
-                <div className="flex flex-wrap gap-3">
+                <label className="block text-xs font-normal tracking-[0.2em] text-black mb-3">COLOR</label>
+                <select
+                  value={selectedColor}
+                  onChange={(e) => setSelectedColor(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
+                >
+                  <option value="">Select an option</option>
                   {product.colors.split(',').map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color.trim())}
-                      className={`px-6 py-2 text-xs font-light border-2 transition-all ${
-                        selectedColor === color.trim()
-                          ? 'border-black bg-black text-white'
-                          : 'border-neutral-300 text-black hover:border-black'
-                      }`}
-                    >
+                    <option key={color} value={color.trim()}>
                       {color.trim()}
-                    </button>
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
 
               {/* Buttons */}
-              <div className="space-y-3 pt-6">
-                <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all rounded">
-                  ADD TO CART
+              <div className="space-y-3 pt-4">
+                <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all">
+                  ADD TO BAG
                 </button>
-                <button className="w-full px-8 py-4 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 transition-all rounded">
-                  INQUIRE
+                <button className="w-full px-8 py-4 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 transition-all">
+                  CONTACT US
                 </button>
               </div>
 
-              {/* Details */}
-              <div className="space-y-6 pt-8 border-t border-neutral-200">
+              {/* Links */}
+              <div className="space-y-2 pt-4 border-t border-neutral-200">
+                <button className="text-xs text-black hover:text-amber-700 font-light tracking-wider underline">
+                  SHIPPING & RETURNS
+                </button>
+              </div>
+
+              {/* Product Details */}
+              <div className="pt-8 border-t border-neutral-200 space-y-4">
                 <div>
-                  <button 
-                    onClick={() => setExpanded(!expanded)}
-                    className="flex items-center justify-between w-full py-4 border-b border-neutral-200 hover:opacity-60 transition-opacity"
-                  >
-                    <p className="text-xs font-normal tracking-[0.2em] text-black">DETAILS</p>
-                    <span className="text-lg text-black">{expanded ? '−' : '+'}</span>
-                  </button>
-                  {expanded && (
-                    <div className="pt-4 space-y-3 text-sm font-light text-neutral-700 leading-relaxed">
-                      <p>This exquisite couture piece represents the pinnacle of craftsmanship and luxury design. Meticulously handcrafted with the finest materials and attention to detail.</p>
-                      <ul className="space-y-2 pt-4">
-                        <li>• Bespoke couture collection</li>
-                        <li>• Hand-selected premium materials</li>
-                        <li>• Artisan crafted</li>
-                        <li>• Made in Dubai</li>
-                        <li>• Limited availability</li>
-                      </ul>
-                    </div>
-                  )}
+                  <p className="text-sm font-light text-black leading-relaxed mb-4">
+                    This exquisite couture piece represents the pinnacle of craftsmanship and luxury design. Meticulously handcrafted with the finest materials and attention to detail.
+                  </p>
                 </div>
 
-                {/* Product Info */}
-                <div className="space-y-3 pt-4 border-t border-neutral-200">
-                  <div>
-                    <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
-                    <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">INVENTORY</p>
-                    <p className="text-sm font-light text-neutral-600">{product.inventory} pieces available</p>
-                  </div>
+                {/* Composition */}
+                <div>
+                  <p className="text-xs font-light text-neutral-700 leading-relaxed space-y-1">
+                    <span className="block">• Composition: Premium materials</span>
+                    <span className="block">• Lining: 100% Silk</span>
+                    <span className="block">• Made in: Dubai</span>
+                    <span className="block">• Care: Dry Clean Only</span>
+                  </p>
+                </div>
+
+                {/* SKU & Model Info */}
+                <div className="pt-4 border-t border-neutral-200">
+                  <p className="text-xs text-neutral-600 font-light">
+                    Model is wearing size {product.sizes.split(',')[0]?.trim()}
+                  </p>
+                </div>
+
+                {/* Collection */}
+                <div className="pt-4">
+                  <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
+                  <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
                 </div>
               </div>
             </div>
