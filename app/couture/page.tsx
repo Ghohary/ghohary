@@ -14,12 +14,13 @@ interface Product {
   status: 'available' | 'preorder' | 'appointment' | 'hidden-price';
   category: string;
   inventory: number;
-  image?: string;
+  images?: string[];
 }
 
 export default function CouturePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
@@ -120,11 +121,14 @@ export default function CouturePage() {
           {products.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               {products.map((product, i) => (
-                <div key={product.id} className="group cursor-pointer" onClick={() => setSelectedProduct(product)}>
+                <div key={product.id} className="group cursor-pointer" onClick={() => {
+                  setSelectedProduct(product);
+                  setSelectedImageIndex(0);
+                }}>
                   <div className="relative aspect-3/4 bg-stone-100 mb-6 overflow-hidden">
-                    {product.image ? (
+                    {product.images && product.images.length > 0 ? (
                       <img 
-                        src={product.image}
+                        src={product.images[0]}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => handleImageError(i)(e)}
@@ -184,62 +188,91 @@ export default function CouturePage() {
       {/* Product Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedProduct(null)}>
-          <div className="bg-white max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setSelectedProduct(null)} className="float-right text-2xl font-light text-black hover:text-neutral-600">×</button>
-            
-            {selectedProduct.image && (
-              <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-96 object-cover rounded mb-6 border border-gray-300" />
-            )}
-            
-            <h2 className="text-3xl font-light text-black mb-4">{selectedProduct.name}</h2>
-            
-            {selectedProduct.price && (
-              <p className="text-lg font-normal text-black mb-4">{selectedProduct.price} AED</p>
-            )}
-            
-            {!selectedProduct.price && (
-              <p className="text-lg font-light text-neutral-600 mb-4">Price Upon Request</p>
-            )}
-
-            <div className="mb-6">
-              <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">STATUS</h3>
-              <div className="inline-block px-3 py-1 bg-neutral-100 text-xs font-light tracking-wide">
-                {selectedProduct.status === 'available' && 'Available'}
-                {selectedProduct.status === 'preorder' && 'Pre-Order'}
-                {selectedProduct.status === 'appointment' && 'Appointment Only'}
-                {selectedProduct.status === 'hidden-price' && 'Hidden Price'}
-              </div>
+          <div className="bg-white max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-gray-300 flex justify-between items-center p-4">
+              <h2 className="text-2xl font-light text-black">{selectedProduct.name}</h2>
+              <button onClick={() => setSelectedProduct(null)} className="text-2xl font-light text-black hover:text-neutral-600">×</button>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">SIZES</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedProduct.sizes.split(',').map((size) => (
-                  <button key={size} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
-                    {size.trim()}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <div className="p-8 space-y-6">
+              {/* Main Image */}
+              {selectedProduct.images && selectedProduct.images.length > 0 && (
+                <div className="space-y-4">
+                  <div className="relative bg-stone-100 rounded overflow-hidden" style={{aspectRatio: '3/4'}}>
+                    <img 
+                      src={selectedProduct.images[selectedImageIndex]} 
+                      alt={`${selectedProduct.name} ${selectedImageIndex + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  {/* Image Thumbnails */}
+                  {selectedProduct.images.length > 1 && (
+                    <div className="flex gap-2 overflow-x-auto pb-2">
+                      {selectedProduct.images.map((img, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedImageIndex(idx)}
+                          className={`flex-shrink-0 w-20 h-28 rounded border-2 transition-all ${
+                            selectedImageIndex === idx ? 'border-black' : 'border-gray-300 opacity-60'
+                          }`}
+                        >
+                          <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover rounded" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {selectedProduct.price && (
+                <p className="text-lg font-normal text-black">{selectedProduct.price} AED</p>
+              )}
+              
+              {!selectedProduct.price && (
+                <p className="text-lg font-light text-neutral-600">Price Upon Request</p>
+              )}
 
-            <div className="mb-6">
-              <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">COLORS</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedProduct.colors.split(',').map((color) => (
-                  <button key={color} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
-                    {color.trim()}
-                  </button>
-                ))}
+              <div>
+                <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">STATUS</h3>
+                <div className="inline-block px-3 py-1 bg-neutral-100 text-xs font-light tracking-wide">
+                  {selectedProduct.status === 'available' && 'Available'}
+                  {selectedProduct.status === 'preorder' && 'Pre-Order'}
+                  {selectedProduct.status === 'appointment' && 'Appointment Only'}
+                  {selectedProduct.status === 'hidden-price' && 'Hidden Price'}
+                </div>
               </div>
-            </div>
 
-            <div className="flex gap-4">
-              <button className="flex-1 px-6 py-3 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900">
-                ADD TO CART
-              </button>
-              <button onClick={() => setSelectedProduct(null)} className="flex-1 px-6 py-3 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50">
-                CLOSE
-              </button>
+              <div>
+                <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">SIZES</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProduct.sizes.split(',').map((size) => (
+                    <button key={size} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
+                      {size.trim()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-normal tracking-[0.2em] text-black mb-3">COLORS</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProduct.colors.split(',').map((color) => (
+                    <button key={color} className="px-4 py-2 border-2 border-black text-black text-xs font-light hover:bg-black hover:text-white transition-all">
+                      {color.trim()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button className="flex-1 px-6 py-3 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 rounded">
+                  ADD TO CART
+                </button>
+                <button onClick={() => setSelectedProduct(null)} className="flex-1 px-6 py-3 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 rounded">
+                  CLOSE
+                </button>
+              </div>
             </div>
           </div>
         </div>
