@@ -54,6 +54,13 @@ export default function ProductPage() {
     );
   }
 
+  // Default placeholder images if no images provided
+  const defaultImages = Array(3).fill(null).map((_, i) => 
+    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23f5f5f5' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='%23ccc' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3E${i + 1}%3C/text%3E%3C/svg%3E`
+  );
+
+  const images = product.images && product.images.length > 0 ? product.images : defaultImages;
+
   return (
     <div className="min-h-screen bg-white">
       <nav className="fixed top-0 w-full z-50 bg-stone-50/95 backdrop-blur-md border-b border-neutral-200">
@@ -82,30 +89,24 @@ export default function ProductPage() {
         {/* Left Side - Images (50%) */}
         <div className="w-1/2 bg-stone-100 overflow-y-auto">
           <div className="space-y-0">
-            {product.images && product.images.length > 0 ? (
-              product.images.map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
-                  onMouseEnter={() => setSelectedImage(idx)}
-                >
-                  <div className="relative w-full h-full flex items-center justify-center">
-                    <img 
-                      src={img} 
-                      alt={`${product.name} - View ${idx + 1}`}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                  <div className="absolute bottom-6 left-6 text-black text-xs tracking-wider font-light">
-                    {String(idx + 1).padStart(2, '0')} / {String((product.images?.length || 1)).padStart(2, '0')}
-                  </div>
+            {images.map((img, idx) => (
+              <div 
+                key={idx} 
+                className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
+                onMouseEnter={() => setSelectedImage(idx)}
+              >
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <img 
+                    src={img} 
+                    alt={`${product.name} - View ${idx + 1}`}
+                    className="max-w-full max-h-full object-contain"
+                  />
                 </div>
-              ))
-            ) : (
-              <div className="relative bg-white h-screen flex items-center justify-center">
-                <span className="text-6xl text-stone-300">1</span>
+                <div className="absolute bottom-6 left-6 text-black text-xs tracking-wider font-light">
+                  {String(idx + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
+                </div>
               </div>
-            )}
+            ))}
           </div>
         </div>
 
