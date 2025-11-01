@@ -79,36 +79,38 @@ export default function ProductPage() {
       </nav>
 
       <div className="pt-20 flex min-h-screen">
-        {/* Left Side - Images (60%) */}
-        <div className="w-3/5 bg-stone-100 overflow-y-auto">
+        {/* Left Side - Images (50%) */}
+        <div className="w-1/2 bg-stone-100 overflow-y-auto">
           <div className="space-y-0">
             {product.images && product.images.length > 0 ? (
               product.images.map((img, idx) => (
                 <div 
                   key={idx} 
-                  className="relative bg-stone-100 h-screen flex items-center justify-center overflow-hidden"
+                  className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
                   onMouseEnter={() => setSelectedImage(idx)}
                 >
-                  <img 
-                    src={img} 
-                    alt={`${product.name} - View ${idx + 1}`}
-                    className="h-full w-full object-contain"
-                  />
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <img 
+                      src={img} 
+                      alt={`${product.name} - View ${idx + 1}`}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
                   <div className="absolute bottom-6 left-6 text-black text-xs tracking-wider font-light">
                     {String(idx + 1).padStart(2, '0')} / {String((product.images?.length || 1)).padStart(2, '0')}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="relative bg-stone-100 h-screen flex items-center justify-center">
+              <div className="relative bg-white h-screen flex items-center justify-center">
                 <span className="text-6xl text-stone-300">1</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Right Side - Details (40%) STICKY */}
-        <div className="w-2/5 bg-white border-l border-neutral-200">
+        {/* Right Side - Details (50%) STICKY */}
+        <div className="w-1/2 bg-white border-l border-neutral-200">
           <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12">
             <div className="space-y-8">
               {/* Product Name */}
@@ -174,10 +176,10 @@ export default function ProductPage() {
 
               {/* Buttons */}
               <div className="space-y-3 pt-6">
-                <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all">
+                <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all rounded">
                   ADD TO CART
                 </button>
-                <button className="w-full px-8 py-4 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 transition-all">
+                <button className="w-full px-8 py-4 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 transition-all rounded">
                   INQUIRE
                 </button>
               </div>
