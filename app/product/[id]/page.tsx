@@ -111,11 +111,16 @@ export default function ProductPage() {
         {/* Right Side - Details (50%) */}
         <div className="w-1/2 bg-white border-l border-neutral-200">
           <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12">
-            <div className="space-y-8 max-w-md">
+            <div className="space-y-6 max-w-md">
               {/* Product Name */}
               <div>
-                <h1 className="text-2xl font-light text-black mb-3">{product.name}</h1>
-                <p className="text-xs text-neutral-600 tracking-wider font-light">SKU: {product.id}</p>
+                <h1 className="text-3xl font-light text-black mb-2">{product.name}</h1>
+                <p className="text-sm text-neutral-600 font-light">{selectedColor}</p>
+              </div>
+
+              {/* Reference */}
+              <div>
+                <p className="text-xs text-neutral-600 font-light tracking-wider">Reference: REF{product.id}</p>
               </div>
 
               {/* Price */}
@@ -125,90 +130,78 @@ export default function ProductPage() {
                 </p>
               </div>
 
+              {/* Other Colors */}
+              <div>
+                <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">OTHER COLORS</p>
+                <div className="flex gap-3">
+                  {colors.slice(0, 5).map((color, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${
+                        selectedColor === color
+                          ? 'border-black'
+                          : 'border-neutral-300 hover:border-black'
+                      }`}
+                      style={{backgroundColor: color.toLowerCase() === 'black' ? '#000' : color.toLowerCase() === 'white' ? '#fff' : color.toLowerCase() === 'brown' ? '#8B4513' : '#ccc'}}
+                      title={color}
+                    />
+                  ))}
+                </div>
+              </div>
+
               {/* Size Selection */}
-              <div>
-                <label className="block text-xs font-normal tracking-[0.2em] text-black mb-3">SIZE</label>
-                <select
-                  value={selectedSize}
-                  onChange={(e) => setSelectedSize(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
-                >
-                  <option value="">Select an option</option>
-                  {sizes.map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-                <button className="text-xs text-amber-700 hover:text-amber-800 font-light tracking-wider mt-2">
-                  Size Guide
-                </button>
+              {sizes.length > 0 && (
+                <div>
+                  <label className="block text-xs font-normal tracking-[0.2em] text-black mb-3">SIZE</label>
+                  <select
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
+                  >
+                    <option value="">Select an option</option>
+                    {sizes.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Add to Bag Button */}
+              <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all mt-6">
+                ADD TO BAG
+              </button>
+
+              {/* Terms */}
+              <div className="text-xs text-neutral-600 font-light">
+                By placing your order you agree to the <button className="underline hover:text-black">terms of service</button>
               </div>
 
-              {/* Color Selection */}
-              <div>
-                <label className="block text-xs font-normal tracking-[0.2em] text-black mb-3">COLOR</label>
-                <select
-                  value={selectedColor}
-                  onChange={(e) => setSelectedColor(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
-                >
-                  <option value="">Select an option</option>
-                  {colors.map((color) => (
-                    <option key={color} value={color}>
-                      {color}
-                    </option>
-                  ))}
-                </select>
+              {/* Delivery Info */}
+              <div className="text-xs text-neutral-700 font-light">
+                Delivery same day or next day, subject to availability.
               </div>
 
-              {/* Buttons */}
-              <div className="space-y-3 pt-4">
-                <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all">
-                  ADD TO BAG
-                </button>
-                <button className="w-full px-8 py-4 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 transition-all">
-                  CONTACT US
-                </button>
-              </div>
-
-              {/* Links */}
-              <div className="space-y-2 pt-4 border-t border-neutral-200">
-                <button className="text-xs text-black hover:text-amber-700 font-light tracking-wider underline">
-                  SHIPPING & RETURNS
-                </button>
-              </div>
-
-              {/* Product Details */}
+              {/* Product Description */}
               <div className="pt-8 border-t border-neutral-200 space-y-4">
-                <div>
-                  <p className="text-sm font-light text-black leading-relaxed mb-4">
-                    This exquisite couture piece represents the pinnacle of craftsmanship and luxury design.
-                  </p>
-                </div>
+                <p className="text-sm font-light text-black leading-relaxed">
+                  {product.name} epitomizes refined elegance and timeless beauty. Meticulously handcrafted with the finest materials, this exquisite piece showcases exceptional artistry and attention to detail. Each element is carefully considered to create a luxury accessory that transcends trends.
+                </p>
+              </div>
 
-                {/* Composition */}
-                <div>
-                  <p className="text-xs font-light text-neutral-700 leading-relaxed space-y-1">
-                    <span className="block">• Composition: Premium materials</span>
-                    <span className="block">• Lining: 100% Silk</span>
-                    <span className="block">• Made in: Dubai</span>
-                    <span className="block">• Care: Dry Clean Only</span>
-                  </p>
-                </div>
-
-                {/* SKU & Model Info */}
-                <div className="pt-4 border-t border-neutral-200">
-                  <p className="text-xs text-neutral-600 font-light">
-                    Model is wearing size {sizes[0] || 'One Size'}
-                  </p>
-                </div>
-
-                {/* Collection */}
-                <div className="pt-4">
-                  <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
-                  <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
-                </div>
+              {/* Features */}
+              <div className="space-y-2">
+                <p className="text-xs font-light text-neutral-700 leading-relaxed">
+                  <span className="block">• Main composition: Premium materials</span>
+                  <span className="block">• Lining: 100% Silk</span>
+                  <span className="block">• Removable chain strap</span>
+                  <span className="block">• Adjustable and removable leather strap</span>
+                  <span className="block">• Interior slip pocket</span>
+                  <span className="block">• Dust bag included</span>
+                  <span className="block">• Made in: Dubai</span>
+                </p>
               </div>
             </div>
           </div>
