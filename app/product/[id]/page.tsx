@@ -95,14 +95,12 @@ export default function ProductPage() {
                 className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
                 onMouseEnter={() => setSelectedImage(idx)}
               >
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <img 
-                    src={img} 
-                    alt={`${product.name} - View ${idx + 1}`}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-                <div className="absolute bottom-6 left-6 text-black text-xs tracking-wider font-light">
+                <img 
+                  src={img} 
+                  alt={`${product.name} - View ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-6 left-6 text-white text-xs tracking-wider font-light bg-black/30 px-2 py-1 rounded">
                   {String(idx + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
                 </div>
               </div>
