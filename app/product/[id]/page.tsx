@@ -15,8 +15,6 @@ interface Product {
   category: string;
   inventory: number;
   images?: string[];
-  sku?: string;
-  composition?: string;
 }
 
 export default function ProductPage() {
@@ -25,6 +23,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
@@ -54,13 +53,13 @@ export default function ProductPage() {
     );
   }
 
-  // Default placeholder images
   const defaultImages = Array(3).fill(null).map((_, i) => 
     `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23f5f5f5' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='%23ccc' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3E${i + 1}%3C/text%3E%3C/svg%3E`
   );
 
   const images = product.images && product.images.length > 0 ? product.images : defaultImages;
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const sizes = product.sizes ? product.sizes.split(',').map(s => s.trim()) : [];
+  const colors = product.colors ? product.colors.split(',').map(c => c.trim()) : [];
 
   return (
     <div className="min-h-screen bg-white">
@@ -135,9 +134,9 @@ export default function ProductPage() {
                   className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
                 >
                   <option value="">Select an option</option>
-                  {product.sizes.split(',').map((size) => (
-                    <option key={size} value={size.trim()}>
-                      {size.trim()}
+                  {sizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
                     </option>
                   ))}
                 </select>
@@ -155,9 +154,9 @@ export default function ProductPage() {
                   className="w-full px-4 py-3 border-2 border-neutral-300 text-black font-light text-sm bg-white cursor-pointer hover:border-black transition-all"
                 >
                   <option value="">Select an option</option>
-                  {product.colors.split(',').map((color) => (
-                    <option key={color} value={color.trim()}>
-                      {color.trim()}
+                  {colors.map((color) => (
+                    <option key={color} value={color}>
+                      {color}
                     </option>
                   ))}
                 </select>
@@ -184,7 +183,7 @@ export default function ProductPage() {
               <div className="pt-8 border-t border-neutral-200 space-y-4">
                 <div>
                   <p className="text-sm font-light text-black leading-relaxed mb-4">
-                    This exquisite couture piece represents the pinnacle of craftsmanship and luxury design. Meticulously handcrafted with the finest materials and attention to detail.
+                    This exquisite couture piece represents the pinnacle of craftsmanship and luxury design.
                   </p>
                 </div>
 
@@ -201,7 +200,7 @@ export default function ProductPage() {
                 {/* SKU & Model Info */}
                 <div className="pt-4 border-t border-neutral-200">
                   <p className="text-xs text-neutral-600 font-light">
-                    Model is wearing size {product.sizes.split(',')[0]?.trim()}
+                    Model is wearing size {sizes[0] || 'One Size'}
                   </p>
                 </div>
 
