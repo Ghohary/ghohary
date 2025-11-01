@@ -15,6 +15,9 @@ interface Product {
   category: string;
   inventory: number;
   images?: string[];
+  description?: string;
+  materials?: string;
+  details?: string[];
 }
 
 export default function ProductPage() {
@@ -24,6 +27,7 @@ export default function ProductPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('products');
@@ -78,9 +82,9 @@ export default function ProductPage() {
       </nav>
 
       <div className="pt-20 flex min-h-screen">
-        {/* Left Side - Images (50%) */}
-        <div className="w-1/2 bg-stone-100 overflow-y-auto">
-          <div className="sticky top-20 space-y-0">
+        {/* Left Side - Images (60%) */}
+        <div className="w-3/5 bg-stone-100 overflow-y-auto">
+          <div className="space-y-0">
             {product.images && product.images.length > 0 ? (
               product.images.map((img, idx) => (
                 <div 
@@ -93,8 +97,8 @@ export default function ProductPage() {
                     alt={`${product.name} - View ${idx + 1}`}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded text-sm">
-                    {idx + 1} / {product.images.length}
+                  <div className="absolute bottom-6 left-6 text-white text-xs tracking-wider font-light">
+                    {String(idx + 1).padStart(2, '0')} / {String((product.images?.length || 1)).padStart(2, '0')}
                   </div>
                 </div>
               ))
@@ -106,38 +110,37 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Right Side - Details (50%) STICKY */}
-        <div className="w-1/2 bg-white">
-          <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12">
-            <div className="max-w-md space-y-8">
-              {/* Product Name & Price */}
+        {/* Right Side - Details (40%) STICKY */}
+        <div className="w-2/5 bg-white">
+          <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12 border-l border-neutral-200">
+            <div className="space-y-8">
+              {/* Product Name */}
               <div>
-                <h1 className="text-5xl font-light text-black mb-4">{product.name}</h1>
-                <p className="text-2xl font-normal text-black">
-                  {product.price ? `${product.price} AED` : 'Price Upon Request'}
-                </p>
+                <h1 className="text-3xl font-light text-black mb-6">{product.name}</h1>
               </div>
 
-              {/* Status */}
+              {/* Price & Status */}
               <div>
-                <p className="text-xs font-normal tracking-[0.2em] text-black mb-3">STATUS</p>
-                <div className="inline-block px-4 py-2 bg-neutral-100 text-sm font-light tracking-wide">
-                  {product.status === 'available' && '✓ Available'}
-                  {product.status === 'preorder' && 'Pre-Order'}
-                  {product.status === 'appointment' && 'Appointment Only'}
-                  {product.status === 'hidden-price' && 'Hidden Price'}
+                <p className="text-2xl font-normal text-black mb-4">
+                  {product.price ? `${product.price} AED` : 'Price Upon Request'}
+                </p>
+                <div className="inline-block px-4 py-2 bg-neutral-100 text-xs font-light tracking-widest">
+                  {product.status === 'available' && '✓ AVAILABLE'}
+                  {product.status === 'preorder' && 'PRE-ORDER'}
+                  {product.status === 'appointment' && 'APPOINTMENT ONLY'}
+                  {product.status === 'hidden-price' && 'INQUIRE FOR PRICE'}
                 </div>
               </div>
 
               {/* Size Selection */}
               <div>
-                <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">SELECT SIZE</p>
-                <div className="grid grid-cols-4 gap-2">
+                <p className="text-xs font-normal tracking-[0.3em] text-black mb-4">SIZES</p>
+                <div className="grid grid-cols-3 gap-2 mb-4">
                   {product.sizes.split(',').map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size.trim())}
-                      className={`px-3 py-3 text-xs font-light border-2 transition-all ${
+                      className={`px-4 py-3 text-xs font-light border-2 transition-all ${
                         selectedSize === size.trim()
                           ? 'border-black bg-black text-white'
                           : 'border-neutral-300 text-black hover:border-black'
@@ -147,17 +150,20 @@ export default function ProductPage() {
                     </button>
                   ))}
                 </div>
+                <button className="text-xs text-amber-700 hover:text-amber-800 font-light tracking-wider">
+                  SIZE GUIDE
+                </button>
               </div>
 
               {/* Color Selection */}
               <div>
-                <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">SELECT COLOR</p>
+                <p className="text-xs font-normal tracking-[0.3em] text-black mb-4">COLORS</p>
                 <div className="flex flex-wrap gap-3">
                   {product.colors.split(',').map((color) => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color.trim())}
-                      className={`px-6 py-2 text-sm font-light border-2 transition-all ${
+                      className={`px-6 py-2 text-xs font-light border-2 transition-all ${
                         selectedColor === color.trim()
                           ? 'border-black bg-black text-white'
                           : 'border-neutral-300 text-black hover:border-black'
@@ -170,24 +176,49 @@ export default function ProductPage() {
               </div>
 
               {/* Buttons */}
-              <div className="space-y-3 pt-4">
-                <button className="w-full px-8 py-4 bg-black text-white text-base font-light tracking-wider hover:bg-neutral-900 transition-all rounded">
+              <div className="space-y-3 pt-6">
+                <button className="w-full px-8 py-4 bg-black text-white text-sm font-light tracking-wider hover:bg-neutral-900 transition-all">
                   ADD TO CART
                 </button>
-                <button className="w-full px-8 py-4 border-2 border-black text-black text-base font-light tracking-wider hover:bg-gray-50 transition-all rounded">
+                <button className="w-full px-8 py-4 border-2 border-black text-black text-sm font-light tracking-wider hover:bg-gray-50 transition-all">
                   INQUIRE
                 </button>
               </div>
 
-              {/* Product Info */}
-              <div className="pt-8 border-t border-neutral-200 space-y-4">
+              {/* Description & Details */}
+              <div className="space-y-6 pt-8 border-t border-neutral-200">
                 <div>
-                  <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
-                  <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
+                  <button 
+                    onClick={() => setExpanded(!expanded)}
+                    className="flex items-center justify-between w-full py-4 border-b border-neutral-200 hover:opacity-60 transition-opacity"
+                  >
+                    <p className="text-xs font-normal tracking-[0.2em] text-black">DETAILS</p>
+                    <span className="text-lg text-black">{expanded ? '−' : '+'}</span>
+                  </button>
+                  {expanded && (
+                    <div className="pt-4 space-y-3 text-sm font-light text-neutral-700 leading-relaxed">
+                      <p>This exquisite couture piece represents the pinnacle of craftsmanship and luxury design. Meticulously handcrafted with the finest materials and attention to detail, each element is carefully considered to create a timeless masterpiece.</p>
+                      <ul className="space-y-2 pt-4">
+                        <li>• Bespoke couture collection</li>
+                        <li>• Hand-selected premium materials</li>
+                        <li>• Artisan crafted</li>
+                        <li>• Made in Dubai</li>
+                        <li>• Limited availability</li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">INVENTORY</p>
-                  <p className="text-sm font-light text-neutral-600">{product.inventory} pieces available</p>
+
+                {/* Product Info */}
+                <div className="space-y-3 pt-4 border-t border-neutral-200">
+                  <div>
+                    <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
+                    <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">INVENTORY</p>
+                    <p className="text-sm font-light text-neutral-600">{product.inventory} pieces available</p>
+                  </div>
                 </div>
               </div>
             </div>
