@@ -77,126 +77,118 @@ export default function ProductPage() {
         </div>
       </nav>
 
-      <div className="pt-20 min-h-screen flex">
+      <div className="pt-20 flex min-h-screen">
         {/* Left Side - Images (50%) */}
-        <div className="w-1/2 bg-stone-100 p-8 flex flex-col justify-center">
-          <div className="space-y-6">
-            {/* Main Image */}
+        <div className="w-1/2 bg-stone-100 overflow-y-auto">
+          <div className="sticky top-20 space-y-0">
             {product.images && product.images.length > 0 ? (
-              <div className="relative bg-white rounded overflow-hidden" style={{aspectRatio: '3/4'}}>
-                <img 
-                  src={product.images[selectedImage]} 
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              product.images.map((img, idx) => (
+                <div 
+                  key={idx} 
+                  className="relative bg-white h-screen flex items-center justify-center overflow-hidden"
+                  onMouseEnter={() => setSelectedImage(idx)}
+                >
+                  <img 
+                    src={img} 
+                    alt={`${product.name} - View ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded text-sm">
+                    {idx + 1} / {product.images.length}
+                  </div>
+                </div>
+              ))
             ) : (
-              <div className="relative bg-white rounded overflow-hidden flex items-center justify-center" style={{aspectRatio: '3/4'}}>
+              <div className="relative bg-white h-screen flex items-center justify-center">
                 <span className="text-6xl text-stone-300">1</span>
-              </div>
-            )}
-
-            {/* Thumbnails */}
-            {product.images && product.images.length > 1 && (
-              <div className="grid grid-cols-5 gap-2">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImage(idx)}
-                    className={`relative bg-white rounded overflow-hidden border-2 transition-all ${
-                      selectedImage === idx ? 'border-black' : 'border-gray-300'
-                    }`}
-                    style={{aspectRatio: '1'}}
-                  >
-                    <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
               </div>
             )}
           </div>
         </div>
 
-        {/* Right Side - Details (50%) */}
-        <div className="w-1/2 bg-white p-12 flex flex-col justify-center overflow-y-auto">
-          <div className="max-w-md space-y-8">
-            {/* Product Name & Price */}
-            <div>
-              <h1 className="text-5xl font-light text-black mb-4">{product.name}</h1>
-              <p className="text-2xl font-normal text-black">
-                {product.price ? `${product.price} AED` : 'Price Upon Request'}
-              </p>
-            </div>
-
-            {/* Status */}
-            <div>
-              <p className="text-xs font-normal tracking-[0.2em] text-black mb-3">STATUS</p>
-              <div className="inline-block px-4 py-2 bg-neutral-100 text-sm font-light tracking-wide">
-                {product.status === 'available' && '✓ Available'}
-                {product.status === 'preorder' && 'Pre-Order'}
-                {product.status === 'appointment' && 'Appointment Only'}
-                {product.status === 'hidden-price' && 'Hidden Price'}
-              </div>
-            </div>
-
-            {/* Size Selection */}
-            <div>
-              <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">SELECT SIZE</p>
-              <div className="grid grid-cols-4 gap-2">
-                {product.sizes.split(',').map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size.trim())}
-                    className={`px-3 py-3 text-xs font-light border-2 transition-all ${
-                      selectedSize === size.trim()
-                        ? 'border-black bg-black text-white'
-                        : 'border-neutral-300 text-black hover:border-black'
-                    }`}
-                  >
-                    {size.trim()}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Color Selection */}
-            <div>
-              <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">SELECT COLOR</p>
-              <div className="flex flex-wrap gap-3">
-                {product.colors.split(',').map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color.trim())}
-                    className={`px-6 py-2 text-sm font-light border-2 transition-all ${
-                      selectedColor === color.trim()
-                        ? 'border-black bg-black text-white'
-                        : 'border-neutral-300 text-black hover:border-black'
-                    }`}
-                  >
-                    {color.trim()}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="space-y-3 pt-4">
-              <button className="w-full px-8 py-4 bg-black text-white text-base font-light tracking-wider hover:bg-neutral-900 transition-all rounded">
-                ADD TO CART
-              </button>
-              <button className="w-full px-8 py-4 border-2 border-black text-black text-base font-light tracking-wider hover:bg-gray-50 transition-all rounded">
-                INQUIRE
-              </button>
-            </div>
-
-            {/* Product Info */}
-            <div className="pt-8 border-t border-neutral-200 space-y-4">
+        {/* Right Side - Details (50%) STICKY */}
+        <div className="w-1/2 bg-white">
+          <div className="sticky top-20 h-[calc(100vh-80px)] overflow-y-auto p-12">
+            <div className="max-w-md space-y-8">
+              {/* Product Name & Price */}
               <div>
-                <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
-                <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
+                <h1 className="text-5xl font-light text-black mb-4">{product.name}</h1>
+                <p className="text-2xl font-normal text-black">
+                  {product.price ? `${product.price} AED` : 'Price Upon Request'}
+                </p>
               </div>
+
+              {/* Status */}
               <div>
-                <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">INVENTORY</p>
-                <p className="text-sm font-light text-neutral-600">{product.inventory} pieces available</p>
+                <p className="text-xs font-normal tracking-[0.2em] text-black mb-3">STATUS</p>
+                <div className="inline-block px-4 py-2 bg-neutral-100 text-sm font-light tracking-wide">
+                  {product.status === 'available' && '✓ Available'}
+                  {product.status === 'preorder' && 'Pre-Order'}
+                  {product.status === 'appointment' && 'Appointment Only'}
+                  {product.status === 'hidden-price' && 'Hidden Price'}
+                </div>
+              </div>
+
+              {/* Size Selection */}
+              <div>
+                <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">SELECT SIZE</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {product.sizes.split(',').map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size.trim())}
+                      className={`px-3 py-3 text-xs font-light border-2 transition-all ${
+                        selectedSize === size.trim()
+                          ? 'border-black bg-black text-white'
+                          : 'border-neutral-300 text-black hover:border-black'
+                      }`}
+                    >
+                      {size.trim()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Selection */}
+              <div>
+                <p className="text-xs font-normal tracking-[0.2em] text-black mb-4">SELECT COLOR</p>
+                <div className="flex flex-wrap gap-3">
+                  {product.colors.split(',').map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color.trim())}
+                      className={`px-6 py-2 text-sm font-light border-2 transition-all ${
+                        selectedColor === color.trim()
+                          ? 'border-black bg-black text-white'
+                          : 'border-neutral-300 text-black hover:border-black'
+                      }`}
+                    >
+                      {color.trim()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="space-y-3 pt-4">
+                <button className="w-full px-8 py-4 bg-black text-white text-base font-light tracking-wider hover:bg-neutral-900 transition-all rounded">
+                  ADD TO CART
+                </button>
+                <button className="w-full px-8 py-4 border-2 border-black text-black text-base font-light tracking-wider hover:bg-gray-50 transition-all rounded">
+                  INQUIRE
+                </button>
+              </div>
+
+              {/* Product Info */}
+              <div className="pt-8 border-t border-neutral-200 space-y-4">
+                <div>
+                  <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">COLLECTION</p>
+                  <p className="text-sm font-light text-neutral-600">Spring Summer 2026</p>
+                </div>
+                <div>
+                  <p className="text-xs font-normal tracking-[0.2em] text-black mb-2">INVENTORY</p>
+                  <p className="text-sm font-light text-neutral-600">{product.inventory} pieces available</p>
+                </div>
               </div>
             </div>
           </div>
